@@ -1,0 +1,21 @@
+
+cmake_minimum_required(VERSION 3.19)
+project(real_time_transit)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+find_package(Protobuf REQUIRED)
+find_package(absl REQUIRED)
+find_package(CURL REQUIRED)
+
+include_directories(${Protobuf_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+include_directories(${CURL_INCLDUE_DIRS})
+
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/gtfs-realtime.proto)
+add_executable(real_time_transit src/realtimereader.cpp src/trip.cpp ${PROTO_SRCS} ${PROTO_HDRS})
+
+target_link_libraries(real_time_transit ${Protobuf_LIBRARIES} absl::log_internal_message absl::log_internal_check_op ${CURL_LIBRARIES})
