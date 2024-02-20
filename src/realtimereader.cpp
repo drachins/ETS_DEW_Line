@@ -88,31 +88,46 @@ void extract_info(transit_realtime::FeedMessage* trip_message, transit_realtime:
     std::cout << "Bus #: " << _trip.get_bus_no() << " Location: " << _trip.get_latitude() << ", " << _trip.get_longitude() << std::endl;
 }
 
-/*size_t write_data_1(void* buffer, size_t size, size_t nmemb, void* userp){
 
-    std::cout << "echo" << std::endl;
+
+
+size_t write_data_1(void* buffer, size_t size, size_t nmemb, void* userp){
+
     size_t real_size = size * nmemb;
-    std::fstream input((char*) buffer, std::ios::in | std::ios::binary);
-    auto feed = static_cast<transit_realtime::FeedMessage*>(userp);
-    feed->ParseFromIstream(&input);
+    auto file = static_cast<std::ofstream*>(userp);
+    file->write(reinterpret_cast<char*>(buffer), real_size);
 
     return real_size;
 
 
 }
 
+void save_to_file1(CURL* curl){
+
+    static std::ofstream output("/Users/davidrachinsky/the_workspace/realtime_transit/build/TripUpdates.pb", std::ios::binary);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &write_data_1);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&output));
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+}
+
 size_t write_data_2(void* buffer, size_t size, size_t nmemb, void* userp){
 
-    std::cout << "echo" << std::endl;
     size_t real_size = size * nmemb;
-    std::fstream input((char*) buffer, std::ios::in | std::ios::binary);
-    auto feed = static_cast<transit_realtime::FeedMessage*>(userp);
-    feed->ParseFromIstream(&input);
-    
-
+    auto file = static_cast<std::ofstream*>(userp);
+    file->write(reinterpret_cast<char*>(buffer), real_size);
     return real_size;
 
-}*/
+}
+
+void save_to_file2(CURL* curl){
+
+    static std::ofstream output("/Users/davidrachinsky/the_workspace/realtime_transit/build/VehiclePositions.pb", std::ios::binary);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &write_data_2);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&output));
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+
+}
 
 
 
@@ -121,63 +136,35 @@ int main(int argc, char* argv[]){
 
     curl_global_init(CURL_GLOBAL_ALL);
 
-    CURL* curl_1;
-    CURL* curl_2;
-
-
-    if(argc < 2){
+    /*if(argc < 2){
         std::cerr << "Usage: " << "GTFS_FEED" << std::endl;
         return -1;
-    }
+    }*/
 
-    transit_realtime::FeedMessage trip_feed;
-    transit_realtime::FeedMessage vehicle_feed;
-
-    /*curl_1 = curl_easy_init();
-    curl_2 = curl_easy_init();
+    CURL* curl_1 = curl_easy_init();
+    CURL* curl_2 = curl_easy_init();
 
     curl_easy_setopt(curl_1, CURLOPT_URL, "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/TripUpdate/TripUpdates.pb");
     curl_easy_setopt(curl_2, CURLOPT_URL, "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb");
 
-    curl_easy_setopt(curl_1, CURLOPT_WRITEFUNCTION, write_data_1);
-    curl_easy_setopt(curl_1, CURLOPT_WRITEDATA, &trip_feed);
-    curl_easy_setopt(curl_1, CURLOPT_VERBOSE, 1L);
-    curl_easy_setopt(curl_1, CURLOPT_FOLLOWLOCATION, 1L);
-
-    curl_easy_setopt(curl_2, CURLOPT_WRITEFUNCTION, write_data_2);
-    curl_easy_setopt(curl_2, CURLOPT_WRITEDATA, &vehicle_feed);
-    curl_easy_setopt(curl_2, CURLOPT_VERBOSE, 1L);
-    curl_easy_setopt(curl_2, CURLOPT_FOLLOWLOCATION, 1L);
+    /*save_to_file1(curl_1);
+    save_to_file2(curl_2);
 
     CURLcode res1 = curl_easy_perform(curl_1);
-
-    if(res1 != CURLE_OK){
-
-        std::cerr << "curl_easy_perform() failed! " << curl_easy_strerror(res1) << std::endl;
-        return -1;
-
-    }
-    else{
-        std::cout << "res1 is ok" << std::endl;
-    }
-
     CURLcode res2 = curl_easy_perform(curl_2);
 
-    if(res2 != CURLE_OK){
+    curl_easy_cleanup(curl_1);
+    curl_easy_cleanup(curl_2);*/
 
-        std::cerr << "curl_easy_perform() failed! " << curl_easy_strerror(res2) << std::endl;
-        return -1;
+    const char* FILE1 = "/Users/davidrachinsky/the_workspace/realtime_transit/build/TripUpdates.pb";
+    const char* FILE2 = "/Users/davidrachinsky/the_workspace/realtime_transit/build/VehiclePositions.pb";
 
-    }
-    else{
-        std::cout << "res2 is ok" << std::endl;
-    }
+    std::ifstream input1(FILE1, std::ios::binary);
+    std::ifstream input2(FILE2, std::ios::binary);
 
-    std::cout << trip_feed.entity_size() << std::endl;
-    std::cout << vehicle_feed.entity_size() << std::endl;*/
 
-    std::fstream input1(argv[1], std::ios::in | std::ios::binary);
-    std::fstream input2(argv[2], std::ios::in | std::ios::binary);
+    transit_realtime::FeedMessage trip_feed;
+    transit_realtime::FeedMessage vehicle_feed;
 
     if(!trip_feed.ParseFromIstream(&input1)){
         std::cerr << "Cant parse trip message!" << std::endl;
@@ -187,13 +174,16 @@ int main(int argc, char* argv[]){
         std::cerr << "Cant parse vehicle message!" << std::endl;
         return -1;
     }
+
+    std::cout << trip_feed.entity_size() << std::endl;
+    std::cout << vehicle_feed.entity_size() << std::endl;
     
     std::string route_numbr;
     std::string arrive_time;
     std::string stop_id;
 
 
-    std::cout << "Enter route#: ";
+   /*std::cout << "Enter route#: ";
     getline(std::cin, route_numbr);
 
     std::cout << "Enter departure time: ";
@@ -203,10 +193,7 @@ int main(int argc, char* argv[]){
     getline(std::cin, stop_id);
 
 
-    extract_info(&trip_feed, &vehicle_feed, &route_numbr, &arrive_time, &stop_id);
-
-    //curl_easy_cleanup(curl_1);
-    //curl_easy_cleanup(curl_2);
+    extract_info(&trip_feed, &vehicle_feed, &route_numbr, &arrive_time, &stop_id);*/
 
     return 0;
 
