@@ -10,6 +10,7 @@ find_package(Protobuf REQUIRED)
 find_package(absl REQUIRED)
 find_package(CURL REQUIRED)
 
+include_directories(proto)
 include_directories(${Protobuf_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 

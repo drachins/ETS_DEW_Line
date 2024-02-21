@@ -8,8 +8,8 @@
 #include <curl/curl.h>
 #include <algorithm>
 
-#include "/Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.h"
-#include "/Users/davidrachinsky/the_workspace/realtime_transit/proto/date.h"
+#include "gtfs-realtime.pb.h"
+#include "date.h"
 #include "trip.h"
 
 
@@ -141,13 +141,13 @@ int main(int argc, char* argv[]){
         return -1;
     }*/
 
-    CURL* curl_1 = curl_easy_init();
+    /*CURL* curl_1 = curl_easy_init();
     CURL* curl_2 = curl_easy_init();
 
     curl_easy_setopt(curl_1, CURLOPT_URL, "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/TripUpdate/TripUpdates.pb");
     curl_easy_setopt(curl_2, CURLOPT_URL, "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb");
 
-    /*save_to_file1(curl_1);
+    save_to_file1(curl_1);
     save_to_file2(curl_2);
 
     CURLcode res1 = curl_easy_perform(curl_1);
@@ -183,7 +183,7 @@ int main(int argc, char* argv[]){
     std::string stop_id;
 
 
-   /*std::cout << "Enter route#: ";
+   std::cout << "Enter route#: ";
     getline(std::cin, route_numbr);
 
     std::cout << "Enter departure time: ";
@@ -193,7 +193,7 @@ int main(int argc, char* argv[]){
     getline(std::cin, stop_id);
 
 
-    extract_info(&trip_feed, &vehicle_feed, &route_numbr, &arrive_time, &stop_id);*/
+    extract_info(&trip_feed, &vehicle_feed, &route_numbr, &arrive_time, &stop_id);
 
     return 0;
 
