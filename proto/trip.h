@@ -1,3 +1,6 @@
+#ifndef TRIP_H
+#define TRIP_H
+
 
 #include <vector>
 #include <memory>
@@ -17,6 +20,7 @@ class Trip{
  public:
     
    Trip();
+   ~Trip();
 
    void set_trip_no(std::string _trip_no){trip_no = _trip_no;}
    void set_bus_no(std::string _bus_no){bus_no = _bus_no;}
@@ -40,3 +44,5 @@ class Trip{
 
 
 };
+
+#endif

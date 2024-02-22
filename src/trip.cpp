@@ -21,3 +21,5 @@ void Trip::set_bus_stops(transit_realtime::TripUpdate trip_update){
 
 }
 
+Trip::~Trip(){}
+
