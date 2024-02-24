@@ -28,6 +28,7 @@ int main(){
         return -1;
     }
 
+    
 
     RealTimeReader transit(trip_feed, vehicle_feed);
     Trip* trip;
