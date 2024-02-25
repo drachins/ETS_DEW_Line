@@ -10,6 +10,8 @@
 
 int main(){
 
+    std::string control_c = "y";
+
     DataDownload data;
 
     transit_realtime::FeedMessage trip_feed;
@@ -53,6 +55,12 @@ int main(){
 
             std::cout << "Route #: " << trip->get_route_no() << " Bus Stop ID: " << transit.stop_id << " Departure Time: " << transit.arrive_time << std::endl;
             std::cout << "Bus #: " << trip->get_bus_no() << " Location: " << trip->get_latitude() << ", " << trip->get_longitude() << std::endl;
+
+            std::cout << "Enter 'y' to continue or 'c' to close the program ";
+            getline(std::cin, control_c);
+            if(control_c == "c"){
+                data.operating = false;
+            }
 
 
         }
