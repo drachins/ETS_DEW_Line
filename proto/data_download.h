@@ -19,7 +19,7 @@ class DataDownload{
         void launch();
 
         bool operating{true};
-        std::thread curl_thread;
+        bool transmission_complete{false};
         
 
     private:
@@ -33,8 +33,10 @@ class DataDownload{
 
         CURL* curl_1;
         CURL* curl_2;
-        CURLcode res1;
-        CURLcode res2;
+        CURLcode res_1;
+        CURLcode res_2;
+
+        std::vector<std::thread> _curl_thread;
 
         const char* url_trip = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/TripUpdate/TripUpdates.pb";
         const char* url_vehicle = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb";

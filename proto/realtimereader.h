@@ -30,8 +30,6 @@ class RealTimeReader{
 
  private:
 
-    //void launch();
-    //void run();
     bool CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc);
 
     std::vector<const transit_realtime::FeedEntity> trip_ent;

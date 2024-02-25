@@ -5,13 +5,13 @@ DataDownload::DataDownload(){};
 
 void DataDownload::launch(){
 
-    curl_thread(DataDownload::run(), this);
+    _curl_thread.emplace_back(&DataDownload::run, this);
 
 }
 
 void DataDownload::run(){
 
-    cur_global_init(CURL_GLOBAL_ALL);   
+    curl_global_init(CURL_GLOBAL_ALL);   
 
     curl_1 = curl_easy_init();
     curl_2 = curl_easy_init();
@@ -19,14 +19,14 @@ void DataDownload::run(){
     curl_easy_setopt(curl_1, CURLOPT_URL, *url_trip);
     curl_easy_setopt(curl_2, CURLOPT_URL, *url_vehicle);
 
-    static std::ofstream output_1(filepath_trip, std::ios::bianry);
+    static std::ofstream output_1(filepath_trip, std::ios::binary);
     curl_easy_setopt(curl_1, CURLOPT_WRITEFUNCTION, &DataDownload::write_data_1);
-    curl_easy_setopt(curl_1, CURLOPT_WRITEDATA, reinterpret_cast<void>(&output_1));
+    curl_easy_setopt(curl_1, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&output_1));
     curl_easy_setopt(curl_1, CURLOPT_FOLLOWLOCATION, 1L);
 
-    static std::0fstream output_2(filepath_vehicle, std::ios::binary);
-    curl_easy_setopt(curl_2, CURLOPT_WRITEFUNCTION, &DataDownload::write_data_2)
-    curl_easy_setopt(curl_2, CURLOPT_WRITEDATA, reinterpret_cast<void>(&output_2));
+    static std::ofstream output_2(filepath_vehicle, std::ios::binary);
+    curl_easy_setopt(curl_2, CURLOPT_WRITEFUNCTION, &DataDownload::write_data_2);
+    curl_easy_setopt(curl_2, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&output_2));
     curl_easy_setopt(curl_2, CURLOPT_FOLLOWLOCATION, 1L);
 
     while(operating){
@@ -34,7 +34,11 @@ void DataDownload::run(){
         res_1 = curl_easy_perform(curl_1);
         res_2 = curl_easy_perform(curl_2);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        transmission_complete = true;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(30000));
+
+        transmission_complete = false;
 
     }
 
@@ -67,6 +71,6 @@ DataDownload::~DataDownload(){
     curl_easy_cleanup(curl_1);
     curl_easy_cleanup(curl_2);
 
-    curl_thread.join();
+    _curl_thread[0].join();
 
 }

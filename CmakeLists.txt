@@ -22,6 +22,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CURL_INCLDUE_DIRS})
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/gtfs-realtime.proto)
-add_executable(real_time_transit src/main.cpp src/trip.cpp src/realtimereader.cpp ${PROTO_SRCS} ${PROTO_HDRS})
+add_executable(real_time_transit src/main.cpp src/trip.cpp src/realtimereader.cpp src/data_download.cpp ${PROTO_SRCS} ${PROTO_HDRS})
 
 target_link_libraries(real_time_transit ${Protobuf_LIBRARIES} absl::log_internal_message absl::log_internal_check_op ${CURL_LIBRARIES})

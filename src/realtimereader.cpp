@@ -7,6 +7,8 @@ RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, c
      vehicle_feed(_vehicle_feed){}
 
 
+
+
 bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc){
 
     uint32_t smt = 25200;
