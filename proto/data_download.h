@@ -2,11 +2,13 @@
 #define DATA_DOWNLOAD_H
 
 #include<curl/curl.h>
+#include<iostream>
 #include<fstream>
 #include<thread>
 #include<memory>
 #include<vector>
 #include<string>
+#include<chrono>
 
 
 class DataDownload{
@@ -15,6 +17,7 @@ class DataDownload{
 
         DataDownload();
         ~DataDownload();
+
 
         void launch();
 
@@ -42,6 +45,7 @@ class DataDownload{
         const char* url_vehicle = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb";
         const std::string filepath_trip = "/Users/davidrachinsky/the_workspace/realtime_transit/build/TripUpdate.pb";
         const std::string filepath_vehicle = "/Users/davidrachinsky/the_workspace/realtime_transit/build/VehiclePositions.pb";
+
 
 
 

@@ -1,6 +1,7 @@
 
 #include<iostream>
 #include<fstream>
+#include<memory>
 
 #include "realtimereader.h"
 #include "data_download.h"
@@ -12,7 +13,7 @@ int main(){
 
     std::string control_c = "y";
 
-    DataDownload data;
+    std::shared_ptr<DataDownload> data(new DataDownload);
 
     transit_realtime::FeedMessage trip_feed;
     transit_realtime::FeedMessage vehicle_feed;
@@ -23,20 +24,24 @@ int main(){
     RealTimeReader transit(trip_feed, vehicle_feed);
     Trip* trip;
 
-    std::cout << "Enter route#: ";
+    /*std::cout << "Enter route#: ";
     getline(std::cin, transit.route_number);
 
     std::cout << "Enter departure time: ";
     getline(std::cin, transit.arrive_time);
 
     std::cout << "Enter stop id: ";
-    getline(std::cin, transit.stop_id);
+    getline(std::cin, transit.stop_id);*/
 
-    data.launch();
+    transit.route_number = "005";
+    transit.arrive_time = "11:16:00 PM";
+    transit.stop_id = "1622";
 
-    while(data.operating){
+    data->launch();
 
-        if(data.transmission_complete){
+    while(data->operating){
+
+        if(data->transmission_complete){
 
             std::fstream input1(FILE1, std::ios::in | std::ios::binary);
             std::fstream input2(FILE2, std::ios::in | std::ios::binary);
@@ -59,7 +64,7 @@ int main(){
             std::cout << "Enter 'y' to continue or 'c' to close the program ";
             getline(std::cin, control_c);
             if(control_c == "c"){
-                data.operating = false;
+                data->operating = false;
             }
 
 
