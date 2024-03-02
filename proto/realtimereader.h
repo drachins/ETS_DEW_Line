@@ -10,6 +10,7 @@
 #include "gtfs-realtime.pb.h"
 #include "date.h"
 #include "trip.h"
+#include "realtimereader.h"
 
 
 class RealTimeReader{
@@ -25,7 +26,8 @@ class RealTimeReader{
 
     
 
-    void launch();
+    //void launch();
+    void run();
 
     bool operating{true};
 
@@ -34,16 +36,16 @@ class RealTimeReader{
     std::string arrive_time;
     std::string stop_id;
 
-    const transit_realtime::FeedMessage trip_feed;
-    const transit_realtime::FeedMessage vehicle_feed;
+    transit_realtime::FeedMessage trip_feed;
+    transit_realtime::FeedMessage vehicle_feed;
 
-    Trip bus_trip;
+    Trip* bus_trip;
 
 
  private:
 
     bool CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc);
-    void run();
+   
 
     std::mutex _reader_lock;
     bool data_ready{false};

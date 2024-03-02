@@ -1,48 +1,47 @@
 
 #include "/Users/davidrachinsky/the_workspace/realtime_transit/proto/realtimereader.h"
 
-void RealTimeReader::launch(){
+/*void RealTimeReader::launch(){
 
     _bus_thread.emplace_back(RealTimeReader::run, this);
-}
+}*/
 
 void RealTimeReader::run(){
 
-    while(operating){
 
-        if(data_ready){
-            _reader_lock.lock();
-            std::ifstream input1(filepath_trip, std::ios::binary);
-            std::ifstream input2(filepath_vehicle, std::ios::binary);
-            _reader_lock.unlock();
+    std::ifstream input1("TripUpdates.pb", std::ios::binary);
+    std::ifstream input2("VehiclePositions.pb", std::ios::binary);
 
 
-            if(!trip_feed.ParseFromIstream(&input1)){
-                std::cerr << "Can't parse trip message!" << std::endl;
-            }
-
-            if(!vehicle_feed.ParseFromIstream(&input2){
-                std::cerr << "Can't parse vehicle message!" << std::endl;
-            }
-
-            bus_trip = ExtractInfo();
-
-            std::cout << "Route #: " << trip->get_route_no() << " Bus Stop ID: " << transit.stop_id << " Departure Time: " << transit.arrive_time << std::endl;
-            std::cout << "Bus #: " << trip->get_bus_no() << " Location: " << trip->get_latitude() << ", " << trip->get_longitude() << std::endl;
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-        }
-
-
-
+    if(!trip_feed.ParseFromIstream(&input1)){
+        std::cerr << "Can't parse trip message!" << std::endl;
     }
+
+    if(!vehicle_feed.ParseFromIstream(&input2)){
+        std::cerr << "Can't parse vehicle message!" << std::endl;
+    }
+
+    bus_trip = ExtractInfo();
+
+    std::cout << "Route #: " << bus_trip->get_route_no() << " Bus Stop ID: " << stop_id << " Departure Time: " << arrive_time << std::endl;
+    std::cout << "Bus #: " << bus_trip->get_bus_no() << " Location: " << bus_trip->get_latitude() << ", " << bus_trip->get_longitude() << std::endl;
+
+
+
+
+
+    
 
 }
 
 
 RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed)
     :trip_feed(_trip_feed),
-     vehicle_feed(_vehicle_feed){}
+     vehicle_feed(_vehicle_feed){
+
+        bus_trip = new(Trip);
+
+     }
 
 
 
@@ -60,10 +59,6 @@ bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip, con
 
         date::sys_seconds tp{std::chrono::seconds{time - delay - smt}};
         std::string time_str = date::format("%I:%M:%S %p", tp);
-        if(stop_time.stop_id() == stop_id){
-            std::cout << _trip_disc->route_id() << " : " << time_str << " : " << stop_time.stop_id() << std::endl;
-            std::cout << departure.delay() << std::endl;
-        }
         if(time_str == arrive_time && stop_time.stop_id() == stop_id){
             return true;
         }
@@ -99,8 +94,8 @@ Trip* RealTimeReader::ExtractInfo(){
 
             const transit_realtime::VehicleDescriptor& vehicle =  trip.vehicle();
 
-            bus_trip.set_trip_no(itr.id()); bus_trip.set_bus_no(vehicle.label()); bus_trip.set_route_no(trip_disc.route_id());
-            bus_trip.set_bus_stops(trip);
+            bus_trip->set_trip_no(itr.id()); bus_trip->set_bus_no(vehicle.label()); bus_trip->set_route_no(trip_disc.route_id());
+            bus_trip->set_bus_stops(trip);
 
         }
 
@@ -109,26 +104,27 @@ Trip* RealTimeReader::ExtractInfo(){
     for(auto&& itr : vehicle_ent){
 
         
-        if(itr.id() == bus_trip.get_bus_no()){
+        if(itr.id() == bus_trip->get_bus_no()){
             
             const transit_realtime::VehiclePosition& vehicle = itr.vehicle();
             const transit_realtime::Position& position = vehicle.position();
 
-            bus_trip.set_longitude(position.longitude());
-            bus_trip.set_latitude(position.latitude());
+            bus_trip->set_longitude(position.longitude());
+            bus_trip->set_latitude(position.latitude());
 
 
         }
 
     }
     
-    return &bus_trip;
+    return bus_trip;
 
 }
 
 RealTimeReader::~RealTimeReader(){
 
-    _bus_thread[0].join();
+    delete bus_trip;
+    //_bus_thread[0].join();
 
 }
 
