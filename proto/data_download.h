@@ -19,21 +19,22 @@ class DataDownload{
         DataDownload();
         ~DataDownload();
 
+        void download();
+        void initialize();
 
-        void launch();
+
+        //void launch();
 
         bool operating{true};
+        bool transmission_complete{true};
         
 
     private:
 
-        void download();
-        void initialize();
-
         void save_to_file1(CURL* curl);
         void save_to_file2(CURL* curl);
-        size_t write_data_1(void* buffer, size_t size, size_t nmemb, void* userp);
-        size_t write_data_2(void* buffer, size_t size, size_t nmemb, void* userp);
+        static size_t write_data_1(void* buffer, size_t size, size_t nmemb, void* userp);
+        static size_t write_data_2(void* buffer, size_t size, size_t nmemb, void* userp);
 
         CURL* curl_1;
         CURL* curl_2;

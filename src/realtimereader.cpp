@@ -10,28 +10,28 @@ void RealTimeReader::run(){
 
     while(operating){
 
-        if()
+        if(data_ready){
+            _reader_lock.lock();
+            std::ifstream input1(filepath_trip, std::ios::binary);
+            std::ifstream input2(filepath_vehicle, std::ios::binary);
+            _reader_lock.unlock();
 
-        _reader_lock.lock();
-        std::ifstream input1(filepath_trip, std::ios::binary);
-        std::ifstream input2(filepath_vehicle, std::ios::binary);
-        _reader_lock.unlock();
 
+            if(!trip_feed.ParseFromIstream(&input1)){
+                std::cerr << "Can't parse trip message!" << std::endl;
+            }
 
-        if(!trip_feed.ParseFromIstream(&input1)){
-            std::cerr << "Can't parse trip message!" << std::endl;
+            if(!vehicle_feed.ParseFromIstream(&input2){
+                std::cerr << "Can't parse vehicle message!" << std::endl;
+            }
+
+            bus_trip = ExtractInfo();
+
+            std::cout << "Route #: " << trip->get_route_no() << " Bus Stop ID: " << transit.stop_id << " Departure Time: " << transit.arrive_time << std::endl;
+            std::cout << "Bus #: " << trip->get_bus_no() << " Location: " << trip->get_latitude() << ", " << trip->get_longitude() << std::endl;
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10000));
         }
-
-        if(!vehicle_feed.ParseFromIstream(&input2){
-            std::cerr << "Can't parse vehicle message!" << std::endl;
-        }
-
-        bus_trip = ExtractInfo();
-
-        std::cout << "Route #: " << trip->get_route_no() << " Bus Stop ID: " << transit.stop_id << " Departure Time: " << transit.arrive_time << std::endl;
-        std::cout << "Bus #: " << trip->get_bus_no() << " Location: " << trip->get_latitude() << ", " << trip->get_longitude() << std::endl;
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 
 

@@ -17,10 +17,12 @@ int main(){
 
     data.initialize();
 
-    transit_realtime::FeedMessage trip_feed;
-    transit_realtime::FeedMessage vehicle_feed;
+    data.download();
 
-    std::shared_ptr<RealTimeReader> transit(new DataDownload(trip_feed, vehicle_feed));
+    //transit_realtime::FeedMessage trip_feed;
+    //transit_realtime::FeedMessage vehicle_feed;
+
+    //std::shared_ptr<RealTimeReader> transit(new RealTimeReader(trip_feed, vehicle_feed));
 
     /*std::cout << "Enter route#: ";
     getline(std::cin, transit.route_number);
@@ -29,7 +31,7 @@ int main(){
     getline(std::cin, transit.arrive_time);
 
     std::cout << "Enter stop id: ";
-    getline(std::cin, transit.stop_id);*/
+    getline(std::cin, transit.stop_id);
 
     transit->route_number = "005";
     transit->arrive_time = "11:16:00 PM";
@@ -42,7 +44,6 @@ int main(){
         if(data.transmission_complete){
 
             data.download();
-            std::this_thread::sleep_for(std::chrono::milliseconds(30000));
         }
         
         else{
@@ -51,7 +52,9 @@ int main(){
 
         }
 
-     }
+        std::this_thread::sleep_for(std::chrono::milliseconds(30000));
+
+     }*/
 
 
     return 0;
