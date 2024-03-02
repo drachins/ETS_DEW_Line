@@ -17,7 +17,28 @@ int main(){
 
     data.initialize();
 
-    data.download();
+    //data.launch();
+
+    while(true){
+
+        std::ofstream* output1 = NULL;
+        std::ofstream* output2 = NULL;
+        output1 = new std::ofstream("TripUpdates.pb", std::ios::binary | std::ios::trunc);
+        output2 = new std::ofstream("VehiclePositions.pb", std::ios::binary | std::ios::trunc);
+        data.SetWriteDataObj1(output1);
+        data.SetWriteDataObj2(output2);
+
+        data.download();
+
+        delete output1;
+        delete output2;
+
+        std::cout << "working" << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(20000));
+
+
+
+    }
 
     //transit_realtime::FeedMessage trip_feed;
     //transit_realtime::FeedMessage vehicle_feed;
