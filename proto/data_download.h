@@ -9,6 +9,7 @@
 #include<vector>
 #include<string>
 #include<chrono>
+#include<mutex>
 
 
 class DataDownload{
@@ -22,12 +23,12 @@ class DataDownload{
         void launch();
 
         bool operating{true};
-        bool transmission_complete{false};
         
 
     private:
 
-        void run();
+        void download();
+        void initialize();
 
         void save_to_file1(CURL* curl);
         void save_to_file2(CURL* curl);
@@ -39,7 +40,9 @@ class DataDownload{
         CURLcode res_1;
         CURLcode res_2;
 
-        std::vector<std::thread> _curl_thread;
+        std::mutex _writer_lock;
+
+        //std::vector<std::thread> _curl_thread;
 
         const char* url_trip = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/TripUpdate/TripUpdates.pb";
         const char* url_vehicle = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb";
