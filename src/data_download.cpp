@@ -48,10 +48,19 @@ void DataDownload::SetWriteDataObj2(std::ofstream* output){
 
 void DataDownload::download(){
 
-    transmission_complete = false;
+    std::ofstream* output1 = NULL;
+    std::ofstream* output2 = NULL;
+    output1 = new std::ofstream("TripUpdates.pb", std::ios::binary | std::ios::trunc);
+    output2 = new std::ofstream("VehiclePositions.pb", std::ios::binary | std::ios::trunc);
+
+    SetWriteDataObj1(output1);
+    SetWriteDataObj2(output2);
 
     res_1 = curl_easy_perform(curl_1);
     res_2 = curl_easy_perform(curl_2);
+
+    delete output1;
+    delete output2;
  
     transmission_complete = true;
 
