@@ -19,25 +19,23 @@ class RealTimeReader{
 
     RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed);
     ~RealTimeReader();
-    Trip* ExtractInfo();
 
-    bool GetDataBool(){return data_ready;};
-    void SetDataBool(bool _data_ready){data_ready = _data_ready;};
-
-    
 
     //void launch();
     void run();
 
-    bool operating{true};
+    bool first_operation{true};
 
 
     std::string route_number;
     std::string arrive_time;
     std::string stop_id;
+    float setpoint_lat;
+    float setpoint_long;
 
     transit_realtime::FeedMessage trip_feed;
     transit_realtime::FeedMessage vehicle_feed;
+
 
     Trip* bus_trip;
 
@@ -45,10 +43,16 @@ class RealTimeReader{
  private:
 
     bool CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc);
-   
+    void TrackBus();
+    bool CheckIfPastSetpoint();
 
-    std::mutex _reader_lock;
-    bool data_ready{false};
+    void ExtractTripInfo();
+    void ExtractVehicleInfo();
+
+    float latitude_delta = 100000;
+    float longitude_delta = 100000;
+    bool past_setpoint{false};
+   
     std::vector<const transit_realtime::FeedEntity> trip_ent;
     std::vector<const transit_realtime::FeedEntity> vehicle_ent;
     std::vector<std::thread> _bus_thread;

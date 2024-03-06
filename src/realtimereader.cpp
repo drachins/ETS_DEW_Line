@@ -6,6 +6,16 @@
     _bus_thread.emplace_back(RealTimeReader::run, this);
 }*/
 
+RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed)
+    :trip_feed(_trip_feed),
+     vehicle_feed(_vehicle_feed){
+
+        bus_trip = new(Trip);
+
+    }
+
+
+
 void RealTimeReader::run(){
 
 
@@ -21,29 +31,23 @@ void RealTimeReader::run(){
         std::cerr << "Can't parse vehicle message!" << std::endl;
     }
 
-    bus_trip = ExtractInfo();
+    if(first_operation){
+        ExtractTripInfo();
+        ExtractVehicleInfo();
+    }
+    else{
+        TrackBus();
+    }
+
 
     std::cout << "Route #: " << bus_trip->get_route_no() << " Bus Stop ID: " << stop_id << " Departure Time: " << arrive_time << std::endl;
-    std::cout << "Bus #: " << bus_trip->get_bus_no() << " Location: " << bus_trip->get_latitude() << ", " << bus_trip->get_longitude() << std::endl;
+    std::cout << "Bus #: " << bus_trip->get_bus_no() << " Location: " << bus_trip->get_latitude() << ", " << bus_trip->get_longitude() << ", Bearing: " << bus_trip->get_bearing() << std::endl;
 
-
-
-
-
-    
+    if(past_setpoint){
+        std::cout << "Bus #: " << bus_trip->get_bus_no() << "Has passed set point at [" << setpoint_lat << " , " << setpoint_long << "]" << std::endl;
+    }
 
 }
-
-
-RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed)
-    :trip_feed(_trip_feed),
-     vehicle_feed(_vehicle_feed){
-
-        bus_trip = new(Trip);
-
-     }
-
-
 
 
 bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc){
@@ -70,20 +74,14 @@ bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip, con
 
 }
 
-Trip* RealTimeReader::ExtractInfo(){
 
+void RealTimeReader::ExtractTripInfo(){
 
     for(int i = 0; i < trip_feed.entity_size(); i++){
 
         trip_ent.push_back(trip_feed.entity(i));
 
-    }
-
-    for(int t = 0; t < vehicle_feed.entity_size(); t++){
-
-        vehicle_ent.push_back(vehicle_feed.entity(t));
-
-    }
+    }    
 
     for(auto&& itr : trip_ent){
 
@@ -98,6 +96,17 @@ Trip* RealTimeReader::ExtractInfo(){
             bus_trip->set_bus_stops(trip);
 
         }
+    }
+
+    first_operation = false;
+
+}
+
+void RealTimeReader::ExtractVehicleInfo(){
+
+    for(int t = 0; t < vehicle_feed.entity_size(); t++){
+
+        vehicle_ent.push_back(vehicle_feed.entity(t));
 
     }
 
@@ -111,13 +120,85 @@ Trip* RealTimeReader::ExtractInfo(){
 
             bus_trip->set_longitude(position.longitude());
             bus_trip->set_latitude(position.latitude());
+            bus_trip->set_bearing(position.bearing());
 
 
         }
 
     }
-    
-    return bus_trip;
+
+
+
+}
+
+void RealTimeReader::TrackBus(){
+
+    ExtractVehicleInfo();
+
+    latitude_delta = abs(bus_trip->get_latitude() - std::stof(setpoint_lat));
+    longitude_delta = abs(bus_trip->get_longitude() - std::stof(setpoint_long));
+
+    if(latitude_delta <= 0.001 && longitude_delta <= 0.001){
+        
+        past_setpoint = CheckIfPastSetpoint();
+
+    }
+}
+
+bool RealTimeReader::CheckIfPastSetpoint(){
+
+    if(bus_trip->get_bearing()  == 0){
+        if(bus_trip->get_latitude() >= setpoint_lat){
+            return true;
+        }
+    }
+
+    else if(bus_trip->get_bearing() > 0 && bus_trip->get_bearing() < 90){
+        if(bus_trip->get_latitude() >= setpoint_lat && bus_trip->get_longitude() >= setpoint_long){
+            return true;
+        }
+    }
+
+    else if(bus_trip->get_bearing() == 90){
+        if(bus_trip->get_longitude() >= setpoint_long){
+            return true;
+        }
+    }
+
+    else if(bus_trip->get_bearing() > 90 && bus_trip->get_bearing() < 180){
+        if(bus_trip->get_latitude() >= setpoint_lat && bus_trip->get_longitude() >= setpoint_long){
+            return true;
+        } 
+    }
+
+    else if(bus_trip->get_bearing() == 180){
+        if(bus_trip->get_latitude() >= setpoint_lat){
+            return true;
+        }
+    }
+
+    else if(bus_trip->get_bearing() > 180 && bus_trip->get_bearing() < 270){
+        if(bus_trip->get_latitude() <= setpoint_lat && bus_trip->get_longitude() <= setpoint_long){
+            return true;
+        }
+
+    }
+
+    else if(bus_trip->get_bearing() == 270){
+        if(bus_trip->get_longitude() <= setpoint_long){
+            return true;
+        }
+    }
+
+    else if(bus_trip->get_bearing() > 270){
+        if(bus_trip->get_latitude() >= setpoint_lat && bus_trip->get_longitude() <= setpoint_long){
+            return true;
+        }
+    }
+
+    else{
+        return false;
+    }
 
 }
 

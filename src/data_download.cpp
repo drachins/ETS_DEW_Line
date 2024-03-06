@@ -3,11 +3,6 @@
 
 DataDownload::DataDownload(){};
 
-void DataDownload::launch(){
-
-    _curl_thread.emplace_back(&DataDownload::download, this);
-
-}
 
 void DataDownload::initialize(){
 
@@ -62,7 +57,6 @@ void DataDownload::download(){
     delete output1;
     delete output2;
  
-    transmission_complete = true;
 
 
 }
@@ -94,7 +88,5 @@ DataDownload::~DataDownload(){
 
     curl_easy_cleanup(curl_1);
     curl_easy_cleanup(curl_2);
-
-    _curl_thread[0].join();
 
 }

@@ -28,11 +28,14 @@ class Trip{
    void set_bus_stops(transit_realtime::TripUpdate trip_update);
    void set_latitude(float _lattitude){lattitude = _lattitude;} 
    void set_longitude(float _longitude){longitude = _longitude;}
+   void set_bearing(float _bearing){bearing = _bearing;}
 
    float get_latitude(){return lattitude;}
    float get_longitude(){return longitude;}
+   float get_bearing(){return bearing;}
    std::string get_bus_no(){return bus_no;}
    std::string get_route_no(){return route_no;}
+
 
  private:
    std::string trip_no;
@@ -41,6 +44,7 @@ class Trip{
    std::vector<Bus_Stop> bus_stops;
    float longitude = 0;
    float lattitude = 0;
+   float bearing = 0;
 
 
 };

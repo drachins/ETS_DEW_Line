@@ -1,12 +1,8 @@
 
 #include<iostream>
-#include<memory>
 
 #include "realtimereader.h"
 #include "data_download.h"
-
-
-
 
 
 
@@ -33,6 +29,12 @@ int main(){
 
     std::cout << "Enter stop id: ";
     getline(std::cin, transit.stop_id);
+
+    std::cout << "Enter setpoint latitude: ";
+    getline(std::cin, transit.setpoint_lat);
+
+    std::cout << "Enter setpoint longitud: ";
+    getline(std::cin, transit.setpoint_long);
 
     //transit->launch();
 

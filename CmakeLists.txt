@@ -23,7 +23,7 @@ include_directories(proto)
 include_directories(${Protobuf_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories(${CURL_INCLDUE_DIRS})
+include_directories(${CURL_INCLUDE_DIRS})
 
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/gtfs-realtime.proto)
 add_executable(real_time_transit src/main.cpp src/trip.cpp src/realtimereader.cpp src/data_download.cpp ${PROTO_SRCS} ${PROTO_HDRS})
