@@ -23,7 +23,7 @@ class Trip{
    ~Trip();
 
    void set_trip_no(std::string _trip_no){trip_no = _trip_no;}
-   void set_bus_no(std::string _bus_no){bus_no = _bus_no;}
+   void set_bus_no(std::string _bus_no);
    void set_route_no(std::string _route_no){route_no = _route_no;}
    void set_bus_stops(transit_realtime::TripUpdate trip_update);
    void set_latitude(float _lattitude){lattitude = _lattitude;} 

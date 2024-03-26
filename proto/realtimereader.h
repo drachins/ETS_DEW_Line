@@ -6,6 +6,7 @@
 #include<chrono>
 #include<thread>
 #include<fstream>
+#include<algorithm>
 
 #include "gtfs-realtime.pb.h"
 #include "date.h"
@@ -23,6 +24,7 @@ class RealTimeReader{
 
     //void launch();
     void run();
+    void set_setpoints_handle(std::vector<std::vector<float>>* _setpoints){setpoints = _setpoints;};
 
     bool first_operation{true};
 
@@ -42,9 +44,10 @@ class RealTimeReader{
 
  private:
 
-    bool CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc);
+    bool CheckForInfo(const transit_realtime::TripUpdate* _trip);
     void TrackBus();
     bool CheckIfPastSetpoint();
+    //void SortSetpoints(std::vector<std::vector<float>>* _setpoints);
 
     void ExtractTripInfo();
     void ExtractVehicleInfo();
@@ -52,6 +55,7 @@ class RealTimeReader{
     float latitude_delta = 100000;
     float longitude_delta = 100000;
     bool past_setpoint{false};
+    std::vector<std::vector<float>>* setpoints;
    
     std::vector<const transit_realtime::FeedEntity> trip_ent;
     std::vector<const transit_realtime::FeedEntity> vehicle_ent;

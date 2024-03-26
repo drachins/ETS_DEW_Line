@@ -14,16 +14,10 @@ void DataDownload::initialize(){
     curl_easy_setopt(curl_1, CURLOPT_URL, url_trip);
     curl_easy_setopt(curl_2, CURLOPT_URL, url_vehicle);
 
-
-    //static std::ofstream output_1;
     curl_easy_setopt(curl_1, CURLOPT_WRITEFUNCTION, DataDownload::write_data_1);
-    //curl_easy_setopt(curl_1, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&output_1));
     curl_easy_setopt(curl_1, CURLOPT_FOLLOWLOCATION, 1L);
 
-
-    //static std::ofstream output_2;
     curl_easy_setopt(curl_2, CURLOPT_WRITEFUNCTION, DataDownload::write_data_2);
-    //curl_easy_setopt(curl_2, CURLOPT_WRITEDATA, reinterpret_cast<void*>(&output_2));
     curl_easy_setopt(curl_2, CURLOPT_FOLLOWLOCATION, 1L);
 
 }
