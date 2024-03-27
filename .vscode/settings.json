@@ -71,7 +71,10 @@
         "memory_resource": "cpp",
         "random": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "fstream": "cpp",
+        "thread": "cpp",
+        "stop_token": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

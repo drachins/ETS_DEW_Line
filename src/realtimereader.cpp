@@ -1,10 +1,6 @@
 
 #include "/Users/davidrachinsky/the_workspace/realtime_transit/proto/realtimereader.h"
 
-/*void RealTimeReader::launch(){
-
-    _bus_thread.emplace_back(RealTimeReader::run, this);
-}*/
 
 RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed)
     :trip_feed(_trip_feed),
@@ -31,6 +27,7 @@ void RealTimeReader::run(){
         std::cerr << "Can't parse vehicle message!" << std::endl;
     }
 
+
     if(first_operation){
         ExtractTripInfo();
         ExtractVehicleInfo();
@@ -44,25 +41,30 @@ void RealTimeReader::run(){
     std::cout << "Bus #: " << bus_trip->get_bus_no() << " Location: " << bus_trip->get_latitude() << ", " << bus_trip->get_longitude() << ", Bearing: " << bus_trip->get_bearing() << std::endl;
 
     if(past_setpoint){
-        std::cout << "Bus #: " << bus_trip->get_bus_no() << "Has passed set point at [" << setpoint_lat << " , " << setpoint_long << "]" << std::endl;
+        std::cout << "Bus #: " << bus_trip->get_bus_no() << " Has passed set point at [" << setpoint_lat << " , " << setpoint_long << "]" << std::endl;
+        past_setpoint = false;
     }
 
 }
 
 
-bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip, const transit_realtime::TripDescriptor* _trip_disc){
+bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip){
 
-    uint32_t smt = 25200;
+    uint32_t mst = 21600;
 
     for(int i = 0; i < _trip->stop_time_update_size(); i++){
 
         const transit_realtime::TripUpdate_StopTimeUpdate& stop_time = _trip->stop_time_update(i);
         const transit_realtime::TripUpdate_StopTimeEvent& departure = stop_time.departure();
+        const transit_realtime::VehicleDescriptor& vehicle =  _trip->vehicle();
         const int64_t time = departure.time();
         const int32_t delay = departure.delay();
-
         date::sys_seconds tp{std::chrono::seconds{time - delay - smt}};
         std::string time_str = date::format("%I:%M:%S %p", tp);
+        
+        if(stop_time.stop_id() == "1271"){
+            std::cout << vehicle.label() << " " << time_str << " " << stop_time.stop_id() << " " << delay << std::endl;
+        }
         if(time_str == arrive_time && stop_time.stop_id() == stop_id){
             return true;
         }
@@ -83,15 +85,16 @@ void RealTimeReader::ExtractTripInfo(){
 
     }    
 
+
     for(auto&& itr : trip_ent){
 
         const transit_realtime::TripUpdate& trip = itr.trip_update();
         const transit_realtime::TripDescriptor& trip_disc = trip.trip();
+        const transit_realtime::VehicleDescriptor& vehicle =  trip.vehicle();
+        
+        if((trip_disc.route_id() == route_number) && CheckForInfo(&trip)){
 
-        if(trip_disc.route_id() == route_number && CheckForInfo(&trip, &trip_disc)){
-
-            const transit_realtime::VehicleDescriptor& vehicle =  trip.vehicle();
-
+            std::cout << trip_disc.route_id() << std::endl;
             bus_trip->set_trip_no(itr.id()); bus_trip->set_bus_no(vehicle.label()); bus_trip->set_route_no(trip_disc.route_id());
             bus_trip->set_bus_stops(trip);
 
@@ -135,14 +138,21 @@ void RealTimeReader::TrackBus(){
 
     ExtractVehicleInfo();
 
-    latitude_delta = abs(bus_trip->get_latitude() - std::stof(setpoint_lat));
-    longitude_delta = abs(bus_trip->get_longitude() - std::stof(setpoint_long));
+    for(std::vector<float> str : *setpoints){
 
-    if(latitude_delta <= 0.001 && longitude_delta <= 0.001){
+        if(abs(bus_trip->get_latitude() - str[0])  <= 0.001 && abs(bus_trip->get_longitude() - str[1]) <= 0.001){
+            past_setpoint = CheckIfPastSetpoint();
+        }
+    }
+
+    /*latitude_delta = abs(bus_trip->get_latitude() - setpoint_lat);
+    longitude_delta = abs(bus_trip->get_longitude() - setpoint_long);
+
+    if(latitude_delta <= 0.01 && longitude_delta <= 0.01){
         
         past_setpoint = CheckIfPastSetpoint();
 
-    }
+    }*/
 }
 
 bool RealTimeReader::CheckIfPastSetpoint(){
@@ -196,9 +206,7 @@ bool RealTimeReader::CheckIfPastSetpoint(){
         }
     }
 
-    else{
-        return false;
-    }
+    return false;
 
 }
 
