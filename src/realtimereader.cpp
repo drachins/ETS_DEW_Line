@@ -41,6 +41,7 @@ void RealTimeReader::run(){
     std::cout << "Bus #: " << bus_trip->get_bus_no() << " Location: " << bus_trip->get_latitude() << ", " << bus_trip->get_longitude() << ", Bearing: " << bus_trip->get_bearing() << std::endl;
 
     if(past_setpoint){
+        
         std::cout << "Bus #: " << bus_trip->get_bus_no() << " Has passed set point at [" << setpoint_lat << " , " << setpoint_long << "]" << std::endl;
         past_setpoint = false;
     }
@@ -50,7 +51,7 @@ void RealTimeReader::run(){
 
 bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip){
 
-    uint32_t mst = 21600;
+    uint16_t mst = 21600;
 
     for(int i = 0; i < _trip->stop_time_update_size(); i++){
 
@@ -59,7 +60,7 @@ bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip){
         const transit_realtime::VehicleDescriptor& vehicle =  _trip->vehicle();
         const int64_t time = departure.time();
         const int32_t delay = departure.delay();
-        date::sys_seconds tp{std::chrono::seconds{time - delay - smt}};
+        date::sys_seconds tp{std::chrono::seconds{time - delay - mst}};
         std::string time_str = date::format("%I:%M:%S %p", tp);
         
         if(stop_time.stop_id() == "1271"){
