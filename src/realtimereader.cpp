@@ -141,7 +141,9 @@ void RealTimeReader::TrackBus(){
 
     for(std::vector<float> str : *setpoints){
 
-        if(abs(bus_trip->get_latitude() - str[0])  <= 0.001 && abs(bus_trip->get_longitude() - str[1]) <= 0.001){
+        setpoint_lat = str[0];
+        setpoint_long = str[1];
+        if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.001 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.001){
             past_setpoint = CheckIfPastSetpoint();
         }
     }
