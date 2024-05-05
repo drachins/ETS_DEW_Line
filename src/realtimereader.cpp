@@ -1,5 +1,5 @@
 
-#include "/Users/davidrachinsky/the_workspace/realtime_transit/proto/realtimereader.h"
+#include "realtimereader.h"
 
 
 RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed)
@@ -44,6 +44,7 @@ void RealTimeReader::run(){
         
         std::cout << "Bus #: " << bus_trip->get_bus_no() << " Has passed set point at [" << setpoint_lat << " , " << setpoint_long << "]" << std::endl;
         past_setpoint = false;
+
     }
 
 }
@@ -139,23 +140,17 @@ void RealTimeReader::TrackBus(){
 
     ExtractVehicleInfo();
 
-    for(std::vector<float> str : *setpoints){
+    for(int i = 0; i < setpoints->size(); i++){
 
-        setpoint_lat = str[0];
-        setpoint_long = str[1];
-        if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.001 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.001){
+        setpoint_lat = setpoints->at(i).at(0);
+        setpoint_long = setpoints->at(i).at(1);
+        std::cout << setpoint_lat << ", " << setpoint_long << std::endl;
+        if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.005 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.005){
             past_setpoint = CheckIfPastSetpoint();
+            setpoints->erase(setpoints->begin() + i);
+            break;
         }
     }
-
-    /*latitude_delta = abs(bus_trip->get_latitude() - setpoint_lat);
-    longitude_delta = abs(bus_trip->get_longitude() - setpoint_long);
-
-    if(latitude_delta <= 0.01 && longitude_delta <= 0.01){
-        
-        past_setpoint = CheckIfPastSetpoint();
-
-    }*/
 }
 
 bool RealTimeReader::CheckIfPastSetpoint(){
