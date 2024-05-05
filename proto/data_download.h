@@ -21,14 +21,10 @@ class DataDownload{
 
         void download();
         void initialize();
-        void launch();
 
         void SetWriteDataObj1(std::ofstream* output);
         void SetWriteDataObj2(std::ofstream* output);
 
-
-        bool operating{true};
-        bool transmission_complete{true};
 
 
         
@@ -47,10 +43,6 @@ class DataDownload{
         CURL* curl_2;
         CURLcode res_1;
         CURLcode res_2;
-
-        std::mutex _writer_lock;
-
-        std::vector<std::thread> _curl_thread;
 
         const char* url_trip = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/TripUpdate/TripUpdates.pb";
         const char* url_vehicle = "http://gtfs.edmonton.ca/TMGTFSRealTimeWebService/Vehicle/VehiclePositions.pb";
