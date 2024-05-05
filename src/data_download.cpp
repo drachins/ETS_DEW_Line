@@ -37,8 +37,6 @@ void DataDownload::SetWriteDataObj2(std::ofstream* output){
 
 void DataDownload::download(){
 
-    std::ofstream* output1 = NULL;
-    std::ofstream* output2 = NULL;
     output1 = new std::ofstream("TripUpdates.pb", std::ios::binary | std::ios::trunc);
     output2 = new std::ofstream("VehiclePositions.pb", std::ios::binary | std::ios::trunc);
 
@@ -80,6 +78,14 @@ size_t DataDownload::write_data_2(void* buffer, size_t size, size_t nmemb, void*
 
 DataDownload::~DataDownload(){
 
+    if(output1 ==  NULL){
+        delete output1;
+    }
+
+    if(output2 == NULL){
+        delete output2;
+    }
+    
     curl_easy_cleanup(curl_1);
     curl_easy_cleanup(curl_2);
 

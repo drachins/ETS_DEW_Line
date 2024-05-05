@@ -40,6 +40,9 @@ class DataDownload{
         static size_t write_data_1(void* buffer, size_t size, size_t nmemb, void* userp);
         static size_t write_data_2(void* buffer, size_t size, size_t nmemb, void* userp);
 
+        std::ofstream* output1;
+        std::ofstream* output2;
+
         CURL* curl_1;
         CURL* curl_2;
         CURLcode res_1;
