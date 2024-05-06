@@ -145,8 +145,10 @@ void RealTimeReader::TrackBus(){
         setpoint_lat = setpoints->at(i).at(0);
         setpoint_long = setpoints->at(i).at(1);
         std::cout << setpoint_lat << ", " << setpoint_long << std::endl;
-        if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.005 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.005){
+        if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.003 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.003){
             past_setpoint = CheckIfPastSetpoint();
+        }
+        if(past_setpoint){
             setpoints->erase(setpoints->begin() + i);
             break;
         }
@@ -180,7 +182,7 @@ bool RealTimeReader::CheckIfPastSetpoint(){
     }
 
     else if(bus_trip->get_bearing() == 180){
-        if(bus_trip->get_latitude() >= setpoint_lat){
+        if(bus_trip->get_latitude() <= setpoint_lat){
             return true;
         }
     }

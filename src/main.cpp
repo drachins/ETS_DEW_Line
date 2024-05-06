@@ -46,7 +46,7 @@ int main(){
 
     for(int i = 0; i < no_setpoints; i++){
 
-        std::cout << "Enter lattitude for setpoint " << i+1 << "; ";
+        std::cout << "Enter lattitude for setpoint " << i+1 << ": ";
         std::cin >> setpoints[i][0];
         std::cout << "Enter longitude for setpoint " << i+1 << ": ";
         std::cin >> setpoints[i][1];
