@@ -3,13 +3,9 @@
 
 #include<string>
 #include<vector>
-#include<chrono>
-#include<thread>
 #include<fstream>
-#include<algorithm>
 
 #include "gtfs-realtime.pb.h"
-#include "date.h"
 #include "trip.h"
 #include "realtimereader.h"
 

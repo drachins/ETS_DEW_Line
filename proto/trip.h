@@ -3,7 +3,6 @@
 
 
 #include <vector>
-#include <memory>
 #include <string>
 #include <chrono>
 #include "gtfs-realtime.pb.h"

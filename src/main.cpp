@@ -1,6 +1,6 @@
 
-#include<iostream>
-#include<algorithm>
+#include <iostream>
+#include <thread>
 
 #include "realtimereader.h"
 #include "data_download.h"

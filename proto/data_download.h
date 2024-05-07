@@ -1,16 +1,10 @@
 #ifndef DATA_DOWNLOAD_H
 #define DATA_DOWNLOAD_H
 
-#include<curl/curl.h>
-#include<iostream>
-#include<fstream>
-#include<thread>
-#include<memory>
-#include<vector>
-#include<string>
-#include<chrono>
-#include<mutex>
-
+#include <curl/curl.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 
 class DataDownload{
 
@@ -25,9 +19,6 @@ class DataDownload{
         void SetWriteDataObj1(std::ofstream* output);
         void SetWriteDataObj2(std::ofstream* output);
 
-
-
-        
 
     private:
 
