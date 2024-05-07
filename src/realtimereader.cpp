@@ -50,31 +50,18 @@ void RealTimeReader::run(){
 }
 
 
-bool RealTimeReader::CheckForInfo(const transit_realtime::TripUpdate* _trip){
+bool RealTimeReader::CheckForInfo(std::vector<Bus_Stop>* _bus_stops){
 
-    uint16_t mst = 21600;
 
-    for(int i = 0; i < _trip->stop_time_update_size(); i++){
+    for(auto&& itr : *_bus_stops){
 
-        const transit_realtime::TripUpdate_StopTimeUpdate& stop_time = _trip->stop_time_update(i);
-        const transit_realtime::TripUpdate_StopTimeEvent& departure = stop_time.departure();
-        const transit_realtime::VehicleDescriptor& vehicle =  _trip->vehicle();
-        const int64_t time = departure.time();
-        const int32_t delay = departure.delay();
-        date::sys_seconds tp{std::chrono::seconds{time - delay - mst}};
-        std::string time_str = date::format("%I:%M:%S %p", tp);
-        
-        if(stop_time.stop_id() == "1271"){
-            std::cout << vehicle.label() << " " << time_str << " " << stop_time.stop_id() << " " << delay << std::endl;
-        }
-        if(time_str == arrive_time && stop_time.stop_id() == stop_id){
+        if(itr.stop_id == stop_id && itr.stop_time == arrive_time){
             return true;
         }
 
     }
+
     return false;
-
-
 
 }
 
@@ -93,15 +80,27 @@ void RealTimeReader::ExtractTripInfo(){
         const transit_realtime::TripUpdate& trip = itr.trip_update();
         const transit_realtime::TripDescriptor& trip_disc = trip.trip();
         const transit_realtime::VehicleDescriptor& vehicle =  trip.vehicle();
-        
-        if((trip_disc.route_id() == route_number) && CheckForInfo(&trip)){
 
-            std::cout << trip_disc.route_id() << std::endl;
+        bus_trip->set_bus_stops(trip);
+        
+        if((trip_disc.route_id() == route_number) && CheckForInfo(bus_trip->get_bus_stops())){
+
             bus_trip->set_trip_no(itr.id()); bus_trip->set_bus_no(vehicle.label()); bus_trip->set_route_no(trip_disc.route_id());
             bus_trip->set_bus_stops(trip);
 
-        }
+            for(Bus_Stop itr : *bus_trip->get_bus_stops()){
+
+                std::cout << itr.stop_id << " " << itr.stop_time << std::endl;
+
+            }
+
     }
+
+        
+
+    }
+
+
 
     first_operation = false;
 

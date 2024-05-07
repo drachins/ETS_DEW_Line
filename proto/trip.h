@@ -5,7 +5,9 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include "/Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.h"
+#include <chrono>
+#include "gtfs-realtime.pb.h"
+#include "date.h"
 
 struct Bus_Stop{
 
@@ -29,12 +31,15 @@ class Trip{
    void set_latitude(float _lattitude){lattitude = _lattitude;} 
    void set_longitude(float _longitude){longitude = _longitude;}
    void set_bearing(float _bearing){bearing = _bearing;}
+   
+   void delete_bus_stops();
 
    float get_latitude(){return lattitude;}
    float get_longitude(){return longitude;}
    float get_bearing(){return bearing;}
    std::string get_bus_no(){return bus_no;}
    std::string get_route_no(){return route_no;}
+   std::vector<Bus_Stop>* get_bus_stops(){return &bus_stops;}
 
 
  private:

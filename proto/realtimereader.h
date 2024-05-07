@@ -44,10 +44,9 @@ class RealTimeReader{
 
  private:
 
-    bool CheckForInfo(const transit_realtime::TripUpdate* _trip);
+    bool CheckForInfo(std::vector<Bus_Stop>* _bus_stops);
     void TrackBus();
     bool CheckIfPastSetpoint();
-    //void SortSetpoints(std::vector<std::vector<float>>* _setpoints);
 
     void ExtractTripInfo();
     void ExtractVehicleInfo();
