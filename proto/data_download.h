@@ -2,7 +2,6 @@
 #define DATA_DOWNLOAD_H
 
 #include <curl/curl.h>
-#include <iostream>
 #include <fstream>
 #include <string>
 

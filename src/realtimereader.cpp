@@ -47,6 +47,11 @@ void RealTimeReader::run(){
 
     }
 
+    if(bus_trip->get_current_stop() == bus_trip->get_bus_stops()->back().stop_id){
+        trip_ongoing = false;
+        std::cout << "Bus has reached final stop. " << std::endl;
+    }
+
 }
 
 
@@ -125,11 +130,14 @@ void RealTimeReader::ExtractVehicleInfo(){
             bus_trip->set_longitude(position.longitude());
             bus_trip->set_latitude(position.latitude());
             bus_trip->set_bearing(position.bearing());
+            bus_trip->set_current_stop(vehicle.stop_id());
 
 
         }
 
     }
+
+    
 
 
 
@@ -152,6 +160,7 @@ void RealTimeReader::TrackBus(){
             break;
         }
     }
+
 }
 
 bool RealTimeReader::CheckIfPastSetpoint(){
@@ -212,7 +221,6 @@ bool RealTimeReader::CheckIfPastSetpoint(){
 RealTimeReader::~RealTimeReader(){
 
     delete bus_trip;
-    //_bus_thread[0].join();
 
 }
 

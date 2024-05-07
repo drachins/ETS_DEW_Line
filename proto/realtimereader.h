@@ -22,7 +22,7 @@ class RealTimeReader{
     void run();
     void set_setpoints_handle(std::vector<std::vector<float>>* _setpoints){setpoints = _setpoints;};
 
-    bool first_operation{true};
+    bool trip_ongoing{false};
 
 
     std::string route_number;
@@ -48,6 +48,7 @@ class RealTimeReader{
     void ExtractVehicleInfo();
 
     bool past_setpoint{false};
+    bool first_operation{true};
     std::vector<std::vector<float>>* setpoints;
    
     std::vector<const transit_realtime::FeedEntity> trip_ent;
