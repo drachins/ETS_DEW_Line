@@ -52,14 +52,11 @@ class RealTimeReader{
     void ExtractTripInfo();
     void ExtractVehicleInfo();
 
-    float latitude_delta = 100000;
-    float longitude_delta = 100000;
     bool past_setpoint{false};
     std::vector<std::vector<float>>* setpoints;
    
     std::vector<const transit_realtime::FeedEntity> trip_ent;
     std::vector<const transit_realtime::FeedEntity> vehicle_ent;
-    std::vector<std::thread> _bus_thread;
     const char* filepath_trip = "/Users/davidrachinsky/the_workspace/realtime_transit/build/TripUpdate.pb";
     const char* filepath_vehicle = "/Users/davidrachinsky/the_workspace/realtime_transit/build/VehiclePositions.pb";    
 
