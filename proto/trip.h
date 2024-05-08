@@ -35,6 +35,7 @@ class Trip{
    float get_latitude(){return lattitude;}
    float get_longitude(){return longitude;}
    float get_bearing(){return bearing;}
+   std::string get_trip_no(){return trip_no;}
    std::string get_bus_no(){return bus_no;}
    std::string get_route_no(){return route_no;}
    std::string get_current_stop(){return current_stop;}

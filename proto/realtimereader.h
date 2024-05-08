@@ -50,6 +50,7 @@ class RealTimeReader{
     bool past_setpoint{false};
     bool first_operation{true};
     std::vector<std::vector<float>>* setpoints;
+    std::string last_stop;
    
     std::vector<const transit_realtime::FeedEntity> trip_ent;
     std::vector<const transit_realtime::FeedEntity> vehicle_ent;
