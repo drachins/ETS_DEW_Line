@@ -2,13 +2,12 @@
 #include "realtimereader.h"
 
 
-RealTimeReader::RealTimeReader(const transit_realtime::FeedMessage _trip_feed, const transit_realtime::FeedMessage _vehicle_feed)
-    :trip_feed(_trip_feed),
-     vehicle_feed(_vehicle_feed){
+RealTimeReader::RealTimeReader(){
 
         bus_trip = new(Trip);
 
-    }
+}
+
 
 
 
@@ -27,6 +26,7 @@ void RealTimeReader::run(){
         std::cerr << "Can't parse vehicle message!" << std::endl;
     }
 
+    ExtractBusStopInfo();
 
     if(first_operation){
         ExtractTripInfo();
@@ -47,7 +47,52 @@ void RealTimeReader::run(){
 
     }
 
+    if(abs(bus_trip->get_latitude() - last_stop_location.stop_lattitude) < 0.0001 && abs(bus_trip->get_longitude() - last_stop_location.stop_longitude) < 0.0001){
+        trip_ongoing = false;
+    }
 
+
+
+}
+
+void RealTimeReader::ExtractBusStopInfo(){
+
+std::ifstream input("stops.txt");
+
+    std::string line, stop_no, stop_latt, stop_long;
+    std::string service_tag_0 = "0,,0,0"; 
+    std::string service_tag_1 = "0,,0,1";
+
+    if(input.is_open()){
+
+        while(std::getline(input, line)){
+
+            std::string service_tag = line.substr(line.size() - std::distance(line.end() - 7, line.end()), 6);
+
+            if(service_tag == service_tag_0 || service_tag == service_tag_1){
+                stop_no = line.substr(0, 5);
+                if(stop_no.at(4) == ','){
+                    stop_no.erase(4);
+                }
+                stop_latt = line.substr(line.size() - std::distance(line.end() - 35, line.end()), 9);
+                stop_long = line.substr(line.size() - std::distance(line.end() - 25, line.end()), 11);
+
+                System_Bus_Stops bus_stop;
+                bus_stop.stop_number = stop_no;
+                try{
+                    bus_stop.stop_lattitude = std::stof(stop_latt);
+                    bus_stop.stop_longitude = std::stof(stop_long);
+                }
+                catch(...){
+                    continue;
+                }
+
+
+                sys_bus_stops.push_back(bus_stop);
+            }
+
+        }
+    }
 }
 
 
@@ -67,6 +112,8 @@ bool RealTimeReader::CheckForInfo(std::vector<Bus_Stop>* _bus_stops){
 }
 
 
+
+
 void RealTimeReader::ExtractTripInfo(){
 
     for(int i = 0; i < trip_feed.entity_size(); i++){
@@ -78,27 +125,44 @@ void RealTimeReader::ExtractTripInfo(){
             bus_trip->set_trip_no(trip_feed.entity(i).id()); bus_trip->set_bus_no(trip_feed.entity(i).trip_update().vehicle().label());
             bus_trip->set_route_no(trip_feed.entity(i).trip_update().trip().route_id()); bus_trip->set_bus_stops(trip_feed.entity(i).trip_update());
 
-            std::cout << trip_feed.entity(i).trip_update().trip().direction_id() << std::endl;
-
-            if(bus_trip->get_bus_stops()->back().stop_time == "06:00:00 PM"){
-                last_stop = bus_trip->get_bus_stops()->at(bus_trip->get_bus_stops()->size() - 2).stop_id;
-            }
-            else{
-                last_stop = bus_trip->get_bus_stops()->back().stop_id;
+            for(auto& v : *bus_trip->get_bus_stops()){
+                std::cout << v.stop_id << " " << v.stop_time << std::endl;
             }
 
-            for(Bus_Stop itr : *bus_trip->get_bus_stops()){
-
-                std::cout << itr.stop_id << " " << itr.stop_time << std::endl;
-
-            }
-            std::cout << last_stop << std::endl;            
+            FindLastStop(bus_trip);  
 
         }
 
     }    
 
     first_operation = false;
+
+}
+
+void RealTimeReader::FindLastStop(Trip* bus_trip){
+
+    std::string last_stop;
+
+    if(bus_trip->get_bus_stops()->back().stop_time == "06:00:00 PM"){
+        last_stop = bus_trip->get_bus_stops()->at(bus_trip->get_bus_stops()->size() - 2).stop_id;
+    }
+    else{
+        last_stop = bus_trip->get_bus_stops()->back().stop_id;
+    }
+
+    std::cout << last_stop << std::endl;
+
+    for(auto& v : sys_bus_stops){
+
+        if(v.stop_number == last_stop){
+            last_stop_location.stop_number = last_stop;
+            last_stop_location.stop_lattitude = v.stop_lattitude;
+            last_stop_location.stop_longitude = v.stop_longitude;
+        }
+
+    }
+
+    std::cout << last_stop_location.stop_number << " " << last_stop_location.stop_lattitude << " " << last_stop_location.stop_longitude << std::endl;
 
 }
 
@@ -111,8 +175,6 @@ void RealTimeReader::ExtractVehicleInfo(){
             bus_trip->set_longitude(vehicle_feed.entity(t).vehicle().position().longitude());
             bus_trip->set_latitude(vehicle_feed.entity(t).vehicle().position().latitude());
             bus_trip->set_bearing(vehicle_feed.entity(t).vehicle().position().bearing());
-
-            std::cout << "echo0 " << vehicle_feed.entity(t).vehicle().current_status() << std::endl;
         }
 
     }
@@ -120,16 +182,7 @@ void RealTimeReader::ExtractVehicleInfo(){
 }
 
 void RealTimeReader::TrackBus(){
-  
-    /*for(int k = 0; k < trip_feed.entity_size(); k++){
 
-        if(trip_feed.entity(k).trip_update().vehicle().label() == bus_trip->get_bus_no() && trip_feed.entity(k).trip_update().trip().route_id() != bus_trip->get_route_no()){
-            //std::cout << trip_feed.entity(k).trip_update().vehicle().label() << " " << trip_feed.entity(k).trip_update().trip().route_id() << std::endl;
-            trip_ongoing = false;
-
-        }
-
-    }*/
 
     ExtractVehicleInfo();
 
