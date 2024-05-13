@@ -38,16 +38,20 @@ void RealTimeReader::run(){
 
 
     std::cout << "Route #: " << bus_trip->get_route_no() << " Bus Stop ID: " << stop_id << " Departure Time: " << arrive_time << std::endl;
-    std::cout << "Bus #: " << bus_trip->get_bus_no() << " Location: " << bus_trip->get_latitude() << ", " << bus_trip->get_longitude() << ", Bearing: " << bus_trip->get_bearing() << std::endl;
+    std::cout << "Bus #: " << bus_trip->get_bus_no(); 
+    printf(" Location: [%f5, %f5], Bearing: %f\n", bus_trip->get_latitude(), bus_trip->get_longitude(), bus_trip->get_bearing());
 
     if(past_setpoint){
         
-        std::cout << "Bus #: " << bus_trip->get_bus_no() << " Has passed set point at [" << setpoint_lat << " , " << setpoint_long << "]" << std::endl;
+        std::cout << "################################################################################################################" << std::endl;
+        std::cout << std::fixed << "##### Bus #: " << bus_trip->get_bus_no() << " Has passed set point at [" << std::setprecision(6) << setpoint_lat << " , " << std::setprecision(6) << setpoint_long << "] #####" << std::endl;
+        std::cout << "################################################################################################################" << std::endl;
         past_setpoint = false;
 
     }
 
-    if(abs(bus_trip->get_latitude() - last_stop_location.stop_lattitude) < 0.0001 && abs(bus_trip->get_longitude() - last_stop_location.stop_longitude) < 0.0001){
+    if(abs(bus_trip->get_latitude() - last_stop_location.stop_lattitude) < 0.0005 && abs(bus_trip->get_longitude() - last_stop_location.stop_longitude) < 0.0005){
+        std::cout << "Bus has completed it's trip" << std::endl;
         trip_ongoing = false;
     }
 
@@ -143,13 +147,7 @@ void RealTimeReader::FindLastStop(Trip* bus_trip){
 
     std::string last_stop;
 
-    if(bus_trip->get_bus_stops()->back().stop_time == "06:00:00 PM"){
-        last_stop = bus_trip->get_bus_stops()->at(bus_trip->get_bus_stops()->size() - 2).stop_id;
-    }
-    else{
-        last_stop = bus_trip->get_bus_stops()->back().stop_id;
-    }
-
+    last_stop = bus_trip->get_bus_stops()->back().stop_id;
     std::cout << last_stop << std::endl;
 
     for(auto& v : sys_bus_stops){
@@ -162,7 +160,7 @@ void RealTimeReader::FindLastStop(Trip* bus_trip){
 
     }
 
-    std::cout << last_stop_location.stop_number << " " << last_stop_location.stop_lattitude << " " << last_stop_location.stop_longitude << std::endl;
+    printf("[%f5, %f5]\n", last_stop_location.stop_lattitude, last_stop_location.stop_longitude);
 
 }
 

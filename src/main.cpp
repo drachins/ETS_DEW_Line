@@ -27,7 +27,7 @@ int main(){
 
         std::cout << "Enter route#: ";
         getline(std::cin, transit->route_number);
-
+        std::cout << transit->route_number << std::endl;
         std::cout << "Enter departure time: ";
         getline(std::cin, transit->arrive_time);
 

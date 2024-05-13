@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iterator>
 #include <iostream>
+#include <stdio.h>
+#include <iomanip>
 
 
 #include "gtfs-realtime.pb.h"
