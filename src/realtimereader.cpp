@@ -43,9 +43,9 @@ void RealTimeReader::run(){
 
     if(past_setpoint){
         
-        std::cout << "#########################################################################" << std::endl;
+        std::cout << "################################################################################################################" << std::endl;
         std::cout << std::fixed << "##### Bus #: " << bus_trip->get_bus_no() << " Has passed set point at [" << std::setprecision(6) << setpoint_lat << " , " << std::setprecision(6) << setpoint_long << "] #####" << std::endl;
-        std::cout << "#########################################################################" << std::endl;
+        std::cout << "################################################################################################################" << std::endl;
         past_setpoint = false;
 
     }
@@ -54,6 +54,7 @@ void RealTimeReader::run(){
         std::cout << "Bus has completed it's trip" << std::endl;
         trip_ongoing = false;
     }
+
 
 
 }
@@ -188,7 +189,6 @@ void RealTimeReader::TrackBus(){
         setpoint_lat = setpoints->at(i).at(0);
         setpoint_long = setpoints->at(i).at(1);
         std::cout << setpoint_lat << ", " << setpoint_long << std::endl;
-
         if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.003 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.003){
             past_setpoint = CheckIfPastSetpoint();
         }
