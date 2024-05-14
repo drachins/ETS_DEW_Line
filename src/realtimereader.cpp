@@ -31,6 +31,7 @@ void RealTimeReader::run(){
     if(first_operation){
         ExtractTripInfo();
         ExtractVehicleInfo();
+        std::for_each(setpoints->begin(), setpoints->end(), [&](std::vector<float> &stp) {past_setpoint_distances.push_back(sqrt(pow(stp.at(0) - bus_trip->get_latitude(), 2) + pow(stp.at(1) - bus_trip->get_longitude() ,2)));});
     }
     else{
         TrackBus();
@@ -184,11 +185,26 @@ void RealTimeReader::TrackBus(){
 
     ExtractVehicleInfo();
 
+
     for(int i = 0; i < setpoints->size(); i++){
 
         setpoint_lat = setpoints->at(i).at(0);
         setpoint_long = setpoints->at(i).at(1);
         std::cout << setpoint_lat << ", " << setpoint_long << std::endl;
+
+        float current_setpoint_distance = sqrt(pow(setpoint_lat - bus_trip->get_latitude(), 2) + pow(setpoint_long - bus_trip->get_longitude(), 2));
+
+        if(current_setpoint_distance > past_setpoint_distances[i]){
+            past_setpoint = true;
+            setpoints->erase(setpoints->begin() + i);
+            past_setpoint_distances.erase(past_setpoint_distances.begin() + i);
+            break;
+        }
+        else{
+            past_setpoint_distances[i] = current_setpoint_distance;
+        }
+
+        /*
         if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.003 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.003){
             past_setpoint = CheckIfPastSetpoint();
         }
@@ -196,6 +212,7 @@ void RealTimeReader::TrackBus(){
             setpoints->erase(setpoints->begin() + i);
             break;
         }
+        */
     }
 
 }

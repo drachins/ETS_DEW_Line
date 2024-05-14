@@ -8,6 +8,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <iomanip>
+#include <cmath>
+#include <algorithm>
 
 
 #include "gtfs-realtime.pb.h"
@@ -61,12 +63,14 @@ class RealTimeReader{
     void ExtractTripInfo();
     void ExtractVehicleInfo();
     void FindLastStop(Trip* bus_trip);
+    void GetDistances(std::vector<float>* distances, std::vector<float>* setpoints);
 
     bool past_setpoint{false};
     bool first_operation{true};
     std::vector<std::vector<float>>* setpoints;
     std::vector<std::vector<std::string>>* bus_stops;
     std::vector<System_Bus_Stops> sys_bus_stops;
+    std::vector<float> past_setpoint_distances;
     System_Bus_Stops last_stop_location;
 
    
