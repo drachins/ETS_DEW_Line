@@ -1,3 +1,0 @@
-/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles/real_time_transit.dir
-/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles/edit_cache.dir
-/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles/rebuild_cache.dir
