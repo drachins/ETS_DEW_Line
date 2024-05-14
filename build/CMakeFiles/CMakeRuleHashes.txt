@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+2f4d0c25918936554dca99f4dcebfd29 gtfs-realtime.pb.h
