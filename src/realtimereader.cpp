@@ -9,8 +9,6 @@ RealTimeReader::RealTimeReader(){
 }
 
 
-
-
 void RealTimeReader::run(){
 
 
@@ -31,7 +29,7 @@ void RealTimeReader::run(){
     if(first_operation){
         ExtractTripInfo();
         ExtractVehicleInfo();
-        std::for_each(setpoints->begin(), setpoints->end(), [&](std::vector<float> &stp) {past_setpoint_distances.push_back(sqrt(pow(stp.at(0) - bus_trip->get_latitude(), 2) + pow(stp.at(1) - bus_trip->get_longitude() ,2)));});
+        ExtractShapeInfo();
     }
     else{
         TrackBus();
@@ -69,7 +67,6 @@ std::ifstream input("stops.txt");
     std::string service_tag_1 = "0,,0,1";
 
     if(input.is_open()){
-
         while(std::getline(input, line)){
 
             std::string service_tag = line.substr(line.size() - std::distance(line.end() - 7, line.end()), 6);
@@ -121,6 +118,8 @@ bool RealTimeReader::CheckForInfo(std::vector<Bus_Stop>* _bus_stops){
 
 void RealTimeReader::ExtractTripInfo(){
 
+
+
     for(int i = 0; i < trip_feed.entity_size(); i++){
 
         bus_trip->set_bus_stops(trip_feed.entity(i).trip_update());
@@ -129,12 +128,15 @@ void RealTimeReader::ExtractTripInfo(){
 
             bus_trip->set_trip_no(trip_feed.entity(i).id()); bus_trip->set_bus_no(trip_feed.entity(i).trip_update().vehicle().label());
             bus_trip->set_route_no(trip_feed.entity(i).trip_update().trip().route_id()); bus_trip->set_bus_stops(trip_feed.entity(i).trip_update());
+            bus_trip->set_direction(trip_feed.entity(i).trip_update().trip().direction_id());
+
 
             for(auto& v : *bus_trip->get_bus_stops()){
                 std::cout << v.stop_id << " " << v.stop_time << std::endl;
             }
 
-            FindLastStop(bus_trip);  
+            //FindLastStop(bus_trip);  
+            
 
         }
 
@@ -167,6 +169,7 @@ void RealTimeReader::FindLastStop(Trip* bus_trip){
 
 void RealTimeReader::ExtractVehicleInfo(){
 
+
     for(int t = 0; t < vehicle_feed.entity_size(); t++){
 
         if(vehicle_feed.entity(t).id() == bus_trip->get_bus_no()){
@@ -185,37 +188,224 @@ void RealTimeReader::TrackBus(){
 
     ExtractVehicleInfo();
 
+    current_bus_pos = std::make_tuple(bus_trip->get_latitude(), bus_trip->get_longitude(), static_cast<uint16_t>(bus_trip->get_bearing()));
 
-    for(int i = 0; i < setpoints->size(); i++){
+    bool index_found{false};
 
-        setpoint_lat = setpoints->at(i).at(0);
-        setpoint_long = setpoints->at(i).at(1);
-        std::cout << setpoint_lat << ", " << setpoint_long << std::endl;
+    float delta = 0.0001;
 
-        float current_setpoint_distance = sqrt(pow(setpoint_lat - bus_trip->get_latitude(), 2) + pow(setpoint_long - bus_trip->get_longitude(), 2));
+    while(!index_found){
 
-        if(current_setpoint_distance > past_setpoint_distances[i]){
-            past_setpoint = true;
-            setpoints->erase(setpoints->begin() + i);
-            past_setpoint_distances.erase(past_setpoint_distances.begin() + i);
+        for(int i = 0; i < route_shape.size(); i++){
+
+            if(FindNearestPoint(route_shape.at(i), current_bus_pos, delta)){
+                bus_trip_index = i;
+                index_found = true;
+                break;
+            }
+
+        }
+
+        delta += 0.0001;
+        if(delta > 0.01){
+            std::cout << "Could not find nearest point!" << std::endl;
             break;
         }
-        else{
-            past_setpoint_distances[i] = current_setpoint_distance;
-        }
 
-        /*
-        if(abs(bus_trip->get_latitude() - setpoint_lat)  <= 0.003 && abs(bus_trip->get_longitude() - setpoint_long) <= 0.003){
-            past_setpoint = CheckIfPastSetpoint();
-        }
-        if(past_setpoint){
-            setpoints->erase(setpoints->begin() + i);
-            break;
-        }
-        */
     }
 
+    std::cout << "Index: " << bus_trip_index << std::endl;
+    std::cout << std::get<0>(route_shape.at(bus_trip_index)) << std::get<1>(route_shape.at(bus_trip_index)) << std::get<2>(route_shape.at(bus_trip_index)) << std::endl;
+
 }
+
+void RealTimeReader::ExtractShapeInfo(){
+
+    std::fstream trip_input("trips.txt");
+    std::fstream shape_input("shapes.txt");
+
+    std::string trip_line;
+    std::string shape_line;
+
+    std::string shape_id;
+    std::vector<uint8_t> n_commas;
+
+
+    if(trip_input.is_open()){
+
+        while(std::getline(trip_input, trip_line)){
+
+            n_commas = FindCommas(trip_line);
+            if(trip_line.substr(n_commas[1]+1, 8) == bus_trip->get_trip_no()){
+                shape_id = trip_line.substr(n_commas[5]+1, n_commas[6] - n_commas[5] - 1);
+            }
+        }
+
+    }
+
+
+    std::cout << shape_id << std::endl;
+
+    float latt_past = 0.0f, long_past = 0.0f;
+
+    if(shape_input.is_open()){
+
+        while(std::getline(shape_input, shape_line)){
+
+            auto n_shape_id = shape_line.find(shape_id);
+
+            if(n_shape_id != std::string::npos){
+
+                auto n_latt = shape_line.find_first_of(",");
+                auto n_long = shape_line.find_last_of(",");
+  
+                float latt_curr = stof(shape_line.substr(n_latt + 1, 9));
+                float long_curr = stof(shape_line.substr(n_long - 11, 11));
+
+                float delta_latt = latt_curr - latt_past;
+                float delta_long = long_curr - long_past;
+
+                uint16_t bearing = GetBearing(delta_latt, delta_long);
+
+                if(bearing == UINT16_MAX){
+                    bearing = std::get<2>(route_shape.back());
+                }                
+
+                std::tuple<float, float, uint16_t> shape_point{latt_past, long_past, bearing};
+                route_shape.push_back(shape_point);
+
+                latt_past = latt_curr;
+                long_past = long_curr;
+
+
+            }
+
+        }
+
+    }
+
+
+
+    route_shape.erase(route_shape.begin() + 0);
+    
+
+    int16_t u_index = 0;
+    float delta = 0.0001;
+
+
+    current_bus_pos = std::make_tuple(bus_trip->get_latitude(), bus_trip->get_longitude(), static_cast<uint16_t>(bus_trip->get_bearing()));
+
+    while(!u_index){
+
+        for(int i = 0; i < route_shape.size(); i++){
+            if(FindNearestPoint(current_bus_pos, route_shape.at(i), delta)){
+                u_index = i;
+                break;
+            }
+        }
+
+        delta += 0.0001;
+
+        if(delta > 0.01){
+            std::cout << "Coudin't find nearest shape point" << std::endl;
+            break;
+        }
+
+    }
+
+
+    route_shape.erase(route_shape.begin(), route_shape.begin() + u_index);
+
+    std::cout << u_index << std::endl;
+    std::cout << std::endl;
+
+    for(auto& itr : route_shape){
+
+        printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
+
+    }
+
+
+
+
+}
+
+std::vector<uint8_t> RealTimeReader::FindCommas(std::string _line){
+
+    std::vector<uint8_t> n_commas;
+
+    for(int i = 0; i < _line.size(); i++){
+
+        if(_line[i] == ','){
+            n_commas.push_back(i);
+        }
+
+    }
+
+    return n_commas;
+
+}
+
+bool RealTimeReader::FindNearestPoint(std::tuple<float, float, uint16_t> bus_loc, std::tuple<float, float, uint16_t> shape_point, float delta){
+
+
+    if(sqrt(pow(std::get<0>(shape_point) - std::get<0>(bus_loc), 2) + pow(std::get<1>(shape_point) - std::get<1>(bus_loc), 2)) < delta && std::get<2>(bus_loc) == std::get<2>(shape_point)){
+        std::cout << "TRUE" << std::endl;
+        return true;
+    }
+
+    return false;
+
+}
+
+uint16_t RealTimeReader::GetBearing(float _delta_latt, float _delta_long){
+
+    uint16_t bearing;
+    float hypot  = sqrt(pow(_delta_latt, 2) + pow(_delta_long, 2));
+
+    if(_delta_latt == 0 && _delta_long == 0){
+        return -1;
+    }
+    else{
+        bearing  = static_cast<uint16_t>(acos(abs(_delta_long)/hypot) * 180/(2 * acos(0.0)));
+    }
+    
+
+    if(bearing >= 0 && bearing <= 15){
+        bearing = 0;
+    }
+    else if(bearing > 15 && bearing < 75){
+        bearing = 45;
+    }
+    else if(bearing >= 75 && bearing <= 90){
+        bearing = 90;
+    }
+
+    if(_delta_latt > 0 && _delta_long >= 0){
+        return(bearing = 90 - bearing);
+    }
+    else if(_delta_latt <= 0 && _delta_long > 0){
+        return(bearing += 90);
+    }
+    else if(_delta_latt  < 0 && _delta_long <= 0){
+        return(bearing = 270 - bearing);
+    }
+    else if(_delta_latt >= 0 && _delta_long < 0){
+        bearing += 270;
+        if(bearing == 360){
+            return(bearing = 0);
+        }
+        else{
+            return bearing;
+        }
+    }
+
+    return bearing;
+
+
+}
+
+
 
 bool RealTimeReader::CheckIfPastSetpoint(){
 

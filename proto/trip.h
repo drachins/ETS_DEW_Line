@@ -31,15 +31,18 @@ class Trip{
    void set_latitude(float _lattitude){lattitude = _lattitude;} 
    void set_longitude(float _longitude){longitude = _longitude;}
    void set_bearing(float _bearing){bearing = _bearing;}
+   void set_direction(uint32_t _direction){direction = _direction;}
    
    float get_latitude(){return lattitude;}
    float get_longitude(){return longitude;}
    float get_bearing(){return bearing;}
+   uint32_t get_direction(){return direction;}
    std::string get_trip_no(){return trip_no;}
    std::string get_bus_no(){return bus_no;}
    std::string get_route_no(){return route_no;}
    std::string get_current_stop(){return current_stop;}
    std::vector<Bus_Stop>* get_bus_stops(){return &bus_stops;}
+
 
 
  private:
@@ -48,6 +51,7 @@ class Trip{
    std::string bus_no;
    std::string current_stop;
    std::vector<Bus_Stop> bus_stops;
+   uint32_t direction = 0;
    float longitude = 0;
    float lattitude = 0;
    float bearing = 0;
