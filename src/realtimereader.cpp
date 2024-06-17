@@ -58,44 +58,6 @@ void RealTimeReader::run(){
 
 }
 
-void RealTimeReader::ExtractBusStopInfo(){
-
-std::ifstream input("stops.txt");
-
-    std::string line, stop_no, stop_latt, stop_long;
-    std::string service_tag_0 = "0,,0,0"; 
-    std::string service_tag_1 = "0,,0,1";
-
-    if(input.is_open()){
-        while(std::getline(input, line)){
-
-            std::string service_tag = line.substr(line.size() - std::distance(line.end() - 7, line.end()), 6);
-
-            if(service_tag == service_tag_0 || service_tag == service_tag_1){
-                stop_no = line.substr(0, 5);
-                if(stop_no.at(4) == ','){
-                    stop_no.erase(4);
-                }
-                stop_latt = line.substr(line.size() - std::distance(line.end() - 35, line.end()), 9);
-                stop_long = line.substr(line.size() - std::distance(line.end() - 25, line.end()), 11);
-
-                System_Bus_Stops bus_stop;
-                bus_stop.stop_number = stop_no;
-                try{
-                    bus_stop.stop_lattitude = std::stof(stop_latt);
-                    bus_stop.stop_longitude = std::stof(stop_long);
-                }
-                catch(...){
-                    continue;
-                }
-
-
-                sys_bus_stops.push_back(bus_stop);
-            }
-
-        }
-    }
-}
 
 
 bool RealTimeReader::CheckForInfo(std::vector<Bus_Stop>* _bus_stops){
@@ -134,8 +96,6 @@ void RealTimeReader::ExtractTripInfo(){
             for(auto& v : *bus_trip->get_bus_stops()){
                 std::cout << v.stop_id << " " << v.stop_time << std::endl;
             }
-
-            //FindLastStop(bus_trip);  
             
 
         }
@@ -143,27 +103,6 @@ void RealTimeReader::ExtractTripInfo(){
     }    
 
     first_operation = false;
-
-}
-
-void RealTimeReader::FindLastStop(Trip* bus_trip){
-
-    std::string last_stop;
-
-    last_stop = bus_trip->get_bus_stops()->back().stop_id;
-    std::cout << last_stop << std::endl;
-
-    for(auto& v : sys_bus_stops){
-
-        if(v.stop_number == last_stop){
-            last_stop_location.stop_number = last_stop;
-            last_stop_location.stop_lattitude = v.stop_lattitude;
-            last_stop_location.stop_longitude = v.stop_longitude;
-        }
-
-    }
-
-    printf("[%f5, %f5]\n", last_stop_location.stop_lattitude, last_stop_location.stop_longitude);
 
 }
 
@@ -214,8 +153,9 @@ void RealTimeReader::TrackBus(){
 
     }
 
+    std::cout << std::endl;
     std::cout << "Index: " << bus_trip_index << std::endl;
-    std::cout << std::get<0>(route_shape.at(bus_trip_index)) << std::get<1>(route_shape.at(bus_trip_index)) << std::get<2>(route_shape.at(bus_trip_index)) << std::endl;
+    std::cout << std::get<0>(route_shape.at(bus_trip_index)) << ", " << std::get<1>(route_shape.at(bus_trip_index)) << ", " <<std::get<2>(route_shape.at(bus_trip_index)) << std::endl;
 
 }
 

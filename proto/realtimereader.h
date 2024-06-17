@@ -17,13 +17,6 @@
 #include "trip.h"
 #include "realtimereader.h"
 
-struct System_Bus_Stops{
-
-    std::string stop_number;
-    float stop_lattitude;
-    float stop_longitude;
-
-};
 
 struct Setpoints{
 
@@ -67,7 +60,6 @@ class RealTimeReader{
     bool CheckForInfo(std::vector<Bus_Stop>* _bus_stops);
     void TrackBus();
     bool CheckIfPastSetpoint();
-    void ExtractBusStopInfo();
 
     void ExtractShapeInfo();
     std::vector<uint8_t>FindCommas(std::string _line);
@@ -76,15 +68,11 @@ class RealTimeReader{
 
     void ExtractTripInfo();
     void ExtractVehicleInfo();
-    void FindLastStop(Trip* bus_trip);
 
     bool past_setpoint{false};
     bool first_operation{true};
     std::vector<std::vector<float>>* setpoints;
-    std::vector<std::vector<std::string>>* bus_stops;
-    std::vector<System_Bus_Stops> sys_bus_stops;
     std::vector<std::tuple<float, float, uint16_t>> route_shape;
-    System_Bus_Stops last_stop_location;
     int16_t bus_trip_index;
     std::tuple<float, float, uint16_t> current_bus_pos;
 
