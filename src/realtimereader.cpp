@@ -24,7 +24,6 @@ void RealTimeReader::run(){
         std::cerr << "Can't parse vehicle message!" << std::endl;
     }
 
-    ExtractBusStopInfo();
 
     if(first_operation){
         ExtractTripInfo();
@@ -47,11 +46,6 @@ void RealTimeReader::run(){
         std::cout << "################################################################################################################" << std::endl;
         past_setpoint = false;
 
-    }
-
-    if(abs(bus_trip->get_latitude() - last_stop_location.stop_lattitude) < 0.0005 && abs(bus_trip->get_longitude() - last_stop_location.stop_longitude) < 0.0005){
-        std::cout << "Bus has completed it's trip" << std::endl;
-        trip_ongoing = false;
     }
 
 
@@ -108,7 +102,6 @@ void RealTimeReader::ExtractTripInfo(){
 
 void RealTimeReader::ExtractVehicleInfo(){
 
-
     for(int t = 0; t < vehicle_feed.entity_size(); t++){
 
         if(vehicle_feed.entity(t).id() == bus_trip->get_bus_no()){
@@ -124,38 +117,14 @@ void RealTimeReader::ExtractVehicleInfo(){
 
 void RealTimeReader::TrackBus(){
 
-
     ExtractVehicleInfo();
 
     current_bus_pos = std::make_tuple(bus_trip->get_latitude(), bus_trip->get_longitude(), static_cast<uint16_t>(bus_trip->get_bearing()));
-
-    bool index_found{false};
-
-    float delta = 0.0001;
-
-    while(!index_found){
-
-        for(int i = 0; i < route_shape.size(); i++){
-
-            if(FindNearestPoint(route_shape.at(i), current_bus_pos, delta)){
-                bus_trip_index = i;
-                index_found = true;
-                break;
-            }
-
-        }
-
-        delta += 0.0001;
-        if(delta > 0.01){
-            std::cout << "Could not find nearest point!" << std::endl;
-            break;
-        }
-
-    }
+    FindNearestPoint();
 
     std::cout << std::endl;
-    std::cout << "Index: " << bus_trip_index << std::endl;
-    std::cout << std::get<0>(route_shape.at(bus_trip_index)) << ", " << std::get<1>(route_shape.at(bus_trip_index)) << ", " <<std::get<2>(route_shape.at(bus_trip_index)) << std::endl;
+    std::cout << "Index: " << index << std::endl;
+    std::cout << std::get<0>(route_shape.at(index)) << ", " << std::get<1>(route_shape.at(index)) << ", " <<std::get<2>(route_shape.at(index)) << std::endl;
 
 }
 
@@ -224,49 +193,23 @@ void RealTimeReader::ExtractShapeInfo(){
 
     }
 
-
-
     route_shape.erase(route_shape.begin() + 0);
     
-
-    int16_t u_index = 0;
-    float delta = 0.0001;
-
-
     current_bus_pos = std::make_tuple(bus_trip->get_latitude(), bus_trip->get_longitude(), static_cast<uint16_t>(bus_trip->get_bearing()));
+    FindNearestPoint();
 
-    while(!u_index){
+    route_shape.erase(route_shape.begin(), route_shape.begin() + index);
 
-        for(int i = 0; i < route_shape.size(); i++){
-            if(FindNearestPoint(current_bus_pos, route_shape.at(i), delta)){
-                u_index = i;
-                break;
-            }
-        }
-
-        delta += 0.0001;
-
-        if(delta > 0.01){
-            std::cout << "Coudin't find nearest shape point" << std::endl;
-            break;
-        }
-
-    }
-
-
-    route_shape.erase(route_shape.begin(), route_shape.begin() + u_index);
-
-    std::cout << u_index << std::endl;
+    std::cout << index << std::endl;
     std::cout << std::endl;
+
+    index = 0;
 
     for(auto& itr : route_shape){
 
         printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
 
     }
-
-
-
 
 }
 
@@ -286,15 +229,30 @@ std::vector<uint8_t> RealTimeReader::FindCommas(std::string _line){
 
 }
 
-bool RealTimeReader::FindNearestPoint(std::tuple<float, float, uint16_t> bus_loc, std::tuple<float, float, uint16_t> shape_point, float delta){
+void RealTimeReader::FindNearestPoint(){
 
+    bool index_found{false};
+    float delta = 0.0001;
 
-    if(sqrt(pow(std::get<0>(shape_point) - std::get<0>(bus_loc), 2) + pow(std::get<1>(shape_point) - std::get<1>(bus_loc), 2)) < delta && std::get<2>(bus_loc) == std::get<2>(shape_point)){
-        std::cout << "TRUE" << std::endl;
-        return true;
+    while(!index_found){
+
+        for(int i = index; i < route_shape.size(); i++){
+            if(sqrt(pow(std::get<0>(route_shape.at(i)) - std::get<0>(current_bus_pos), 2) + pow(std::get<1>(route_shape.at(i)) - std::get<1>(current_bus_pos), 2)) < delta && std::get<2>(current_bus_pos) == std::get<2>(route_shape.at(i))){
+                index = i;
+                index_found = true;
+                std::cout << "TRUE" << std::endl;
+                break;
+            }
+        }
+
+        delta += 0.0001;
+
+        if(delta > 0.01){
+            std::cout << "Coudin't find nearest shape point" << std::endl;
+            break;
+        }
+
     }
-
-    return false;
 
 }
 

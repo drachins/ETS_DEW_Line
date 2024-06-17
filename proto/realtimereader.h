@@ -63,7 +63,7 @@ class RealTimeReader{
 
     void ExtractShapeInfo();
     std::vector<uint8_t>FindCommas(std::string _line);
-    bool FindNearestPoint(std::tuple<float, float, uint16_t> bus_loc, std::tuple<float, float, uint16_t> shape_point, float delta);
+    void FindNearestPoint();
     uint16_t GetBearing(float _delta_latt, float _delta_long);
 
     void ExtractTripInfo();
@@ -73,7 +73,7 @@ class RealTimeReader{
     bool first_operation{true};
     std::vector<std::vector<float>>* setpoints;
     std::vector<std::tuple<float, float, uint16_t>> route_shape;
-    int16_t bus_trip_index;
+    int16_t index{0};
     std::tuple<float, float, uint16_t> current_bus_pos;
 
    
