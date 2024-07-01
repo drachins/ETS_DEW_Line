@@ -47,8 +47,6 @@ class RealTimeReader{
 
     bool CheckForInfo(std::vector<Bus_Stop>* _bus_stops);
     void TrackBus();
-    bool CheckIfPastSetpoint();
-
     void ExtractShapeInfo();
     void SetSetpoints();
     std::vector<int>FindCommas(std::string _line);
