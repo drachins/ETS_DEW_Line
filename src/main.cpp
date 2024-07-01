@@ -16,9 +16,7 @@ int main(){
     DataDownload data;
 
     data.initialize();
-
-
-
+    
     while(true){
 
         RealTimeReader* transit = new(RealTimeReader);
@@ -48,7 +46,7 @@ int main(){
 
         }
 
-        transit->set_setpoints_handle(&setpoints);
+        transit->set_setpoints(setpoints);
 
         transit->trip_ongoing = true;
 

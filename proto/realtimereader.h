@@ -4,28 +4,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <iterator>
 #include <iostream>
 #include <stdio.h>
-#include <iomanip>
 #include <cmath>
+#include <utility>
 #include <algorithm>
-#include <tuple>
 
 
 #include "gtfs-realtime.pb.h"
 #include "trip.h"
 #include "realtimereader.h"
-
-
-struct Setpoints{
-
-    float setpoint_long;
-    float setpoint_latt;
-    int setpoint_index;
-
-};
-
 
 
 class RealTimeReader{
@@ -36,7 +24,7 @@ class RealTimeReader{
     ~RealTimeReader();
 
     void run();
-    void set_setpoints_handle(std::vector<std::vector<float>>* _setpoints){setpoints = _setpoints;};
+    void set_setpoints(std::vector<std::vector<float>> _setpoints){u_setpoints = _setpoints;};
 
 
     bool trip_ongoing{false};
@@ -62,19 +50,21 @@ class RealTimeReader{
     bool CheckIfPastSetpoint();
 
     void ExtractShapeInfo();
-    std::vector<uint8_t>FindCommas(std::string _line);
-    void FindNearestPoint();
-    uint16_t GetBearing(float _delta_latt, float _delta_long);
+    void SetSetpoints();
+    std::vector<int>FindCommas(std::string _line);
+    void FindNearestPoint(int& _index);
+    int GetBearing(float _delta_latt, float _delta_long);
 
     void ExtractTripInfo();
     void ExtractVehicleInfo();
 
     bool past_setpoint{false};
     bool first_operation{true};
-    std::vector<std::vector<float>>* setpoints;
-    std::vector<std::tuple<float, float, uint16_t>> route_shape;
-    int16_t index{0};
-    std::tuple<float, float, uint16_t> current_bus_pos;
+    std::vector<std::vector<float>> u_setpoints;
+    std::vector<int> setpoint_indices;
+    std::vector<std::tuple<float, float, int>> route_shape;
+    int index{0};
+    std::tuple<float, float, int> current_bus_pos;
 
    
     std::vector<const transit_realtime::FeedEntity> trip_ent;
