@@ -105,6 +105,8 @@ void RealTimeReader::ExtractVehicleInfo(){
             bus_trip->set_longitude(vehicle_feed.entity(t).vehicle().position().longitude());
             bus_trip->set_latitude(vehicle_feed.entity(t).vehicle().position().latitude());
             bus_trip->set_bearing(vehicle_feed.entity(t).vehicle().position().bearing());
+            std::cout << "trip id: " << vehicle_feed.entity(t).vehicle().trip().trip_id() << std::endl;
+            std::cout << bus_trip->get_bus_no() << std::endl;
         }
 
     }
@@ -143,10 +145,10 @@ void RealTimeReader::ExtractShapeInfo(){
     std::string trip_line;
     std::string shape_line;
 
-    std::string shape_id;
+    std::string shape_id =  "FFFF";
     std::vector<int> n_commas;
 
-
+    std::cout << bus_trip->get_trip_no() << std::endl;
     if(trip_input.is_open()){
 
         while(std::getline(trip_input, trip_line)){
@@ -175,6 +177,7 @@ void RealTimeReader::ExtractShapeInfo(){
                 auto n_latt = shape_line.find_first_of(",");
                 auto n_long = shape_line.find_last_of(",");
   
+
                 float latt_curr = stof(shape_line.substr(n_latt + 1, 9));
                 float long_curr = stof(shape_line.substr(n_long - 11, 11));
 
@@ -200,28 +203,34 @@ void RealTimeReader::ExtractShapeInfo(){
 
     }
 
-    std::cout << "echo2" << std::endl;
 
-    route_shape.erase(route_shape.begin() + 0);
+    if(!route_shape.empty()){
 
-    std::cout << "echo3" << std::endl;
-    
-    current_bus_pos = std::make_tuple(bus_trip->get_latitude(), bus_trip->get_longitude(), static_cast<int>(bus_trip->get_bearing()));
+        std::cout << "echo2" << std::endl;
 
-    FindNearestPoint(index);
+        route_shape.erase(route_shape.begin() + 0);
 
-    route_shape.erase(route_shape.begin(), route_shape.begin() + index);
+        std::cout << "echo3" << std::endl;
+        
+        current_bus_pos = std::make_tuple(bus_trip->get_latitude(), bus_trip->get_longitude(), static_cast<int>(bus_trip->get_bearing()));
 
-    std::cout << index << std::endl;
-    std::cout << std::endl;
+        FindNearestPoint(index);
 
-    index = 0;
+        route_shape.erase(route_shape.begin(), route_shape.begin() + index);
 
-    for(auto& itr : route_shape){
+        std::cout << index << std::endl;
+        std::cout << std::endl;
 
-        printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
+        index = 0;
 
+        for(auto& itr : route_shape){
+
+            printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
+
+        }
     }
+
+
 
 }
 

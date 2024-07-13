@@ -13,7 +13,6 @@
 
 #include "gtfs-realtime.pb.h"
 #include "trip.h"
-#include "realtimereader.h"
 
 
 class RealTimeReader{
@@ -69,7 +68,6 @@ class RealTimeReader{
     std::vector<const transit_realtime::FeedEntity> vehicle_ent;
     const char* filepath_trip = "/Users/davidrachinsky/the_workspace/realtime_transit/build/TripUpdate.pb";
     const char* filepath_vehicle = "/Users/davidrachinsky/the_workspace/realtime_transit/build/VehiclePositions.pb";    
-
 };
 
 #endif
