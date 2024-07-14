@@ -5,6 +5,7 @@
 RealTimeReader::RealTimeReader(){
 
         bus_trip = new(Trip);
+        first_route_shape = new(std::vector<std::tuple<float, float, int>>);
 
 }
 
@@ -28,7 +29,6 @@ void RealTimeReader::run(){
     if(first_operation){
         ExtractTripInfo();
         ExtractVehicleInfo();
-        ExtractShapeInfo();
         SetSetpoints();
     }
     else{
@@ -67,9 +67,6 @@ bool RealTimeReader::CheckForInfo(std::vector<Bus_Stop>* _bus_stops){
 
 void RealTimeReader::ExtractTripInfo(){
 
-
-
-
     for(int i = 0; i < trip_feed.entity_size(); i++){
 
         bus_trip->set_bus_stops(trip_feed.entity(i).trip_update());
@@ -80,7 +77,6 @@ void RealTimeReader::ExtractTripInfo(){
             bus_trip->set_route_no(trip_feed.entity(i).trip_update().trip().route_id()); bus_trip->set_bus_stops(trip_feed.entity(i).trip_update());
             bus_trip->set_direction(trip_feed.entity(i).trip_update().trip().direction_id());
 
-
             for(auto& v : *bus_trip->get_bus_stops()){
                 std::cout << v.stop_id << " " << v.stop_time << std::endl;
             }
@@ -90,7 +86,9 @@ void RealTimeReader::ExtractTripInfo(){
 
     }    
 
-    first_operation = false;
+    route_shape = *ExtractShapeInfo(bus_trip->get_trip_no());
+
+
 
 }
 
@@ -98,6 +96,7 @@ void RealTimeReader::ExtractVehicleInfo(){
 
         std::cout << "echo1" << std::endl;
 
+    std::string trip_numb; 
     for(int t = 0; t < vehicle_feed.entity_size(); t++){
 
         if(vehicle_feed.entity(t).id() == bus_trip->get_bus_no()){
@@ -107,9 +106,22 @@ void RealTimeReader::ExtractVehicleInfo(){
             bus_trip->set_bearing(vehicle_feed.entity(t).vehicle().position().bearing());
             std::cout << "trip id: " << vehicle_feed.entity(t).vehicle().trip().trip_id() << std::endl;
             std::cout << bus_trip->get_bus_no() << std::endl;
+
+            if(first_operation){
+                if(vehicle_feed.entity(t).vehicle().trip().trip_id() != bus_trip->get_trip_no()){
+                    first_route_shape = ExtractShapeInfo(vehicle_feed.entity(t).vehicle().trip().trip_id());
+                    std::vector<std::tuple<float, float, int>> route_shape_conc(first_route_shape->size() + route_shape.size());
+                    std::merge(first_route_shape->begin(), first_route_shape->end(), route_shape.begin(), route_shape.end(), route_shape_conc.begin());
+                    route_shape = route_shape_conc;
+                    first_operation = false;
+                }
+                else
+                    first_operation = false;
+            }
         }
 
     }
+
 
 }
 
@@ -137,7 +149,7 @@ void RealTimeReader::TrackBus(){
 
 }
 
-void RealTimeReader::ExtractShapeInfo(){
+std::vector<std::tuple<float, float, int>>* RealTimeReader::ExtractShapeInfo(std::string trip_no){
 
     std::fstream trip_input("trips.txt");
     std::fstream shape_input("shapes.txt");
@@ -147,6 +159,7 @@ void RealTimeReader::ExtractShapeInfo(){
 
     std::string shape_id =  "FFFF";
     std::vector<int> n_commas;
+    std::vector<std::tuple<float, float, int>>* _route_shape;
 
     std::cout << bus_trip->get_trip_no() << std::endl;
     if(trip_input.is_open()){
@@ -154,7 +167,7 @@ void RealTimeReader::ExtractShapeInfo(){
         while(std::getline(trip_input, trip_line)){
 
             n_commas = FindCommas(trip_line);
-            if(trip_line.substr(n_commas[1]+1, 8) == bus_trip->get_trip_no()){
+            if(trip_line.substr(n_commas[1]+1, 8) == trip_no){
                 shape_id = trip_line.substr(n_commas[5]+1, n_commas[6] - n_commas[5] - 1);
             }
         }
@@ -187,11 +200,11 @@ void RealTimeReader::ExtractShapeInfo(){
                 int bearing = GetBearing(delta_latt, delta_long);
 
                 if(bearing == -1){
-                    bearing = std::get<2>(route_shape.back());
+                    bearing = std::get<2>(_route_shape->back());
                 }                
 
                 std::tuple<float, float, int> shape_point{latt_past, long_past, bearing};
-                route_shape.push_back(shape_point);
+                _route_shape->push_back(shape_point);
 
                 latt_past = latt_curr;
                 long_past = long_curr;
@@ -204,11 +217,11 @@ void RealTimeReader::ExtractShapeInfo(){
     }
 
 
-    if(!route_shape.empty()){
+    if(!_route_shape->empty()){
 
         std::cout << "echo2" << std::endl;
 
-        route_shape.erase(route_shape.begin() + 0);
+        _route_shape->erase(_route_shape->begin() + 0);
 
         std::cout << "echo3" << std::endl;
         
@@ -216,21 +229,23 @@ void RealTimeReader::ExtractShapeInfo(){
 
         FindNearestPoint(index);
 
-        route_shape.erase(route_shape.begin(), route_shape.begin() + index);
+        _route_shape->erase(_route_shape->begin(), _route_shape->begin() + index);
 
         std::cout << index << std::endl;
         std::cout << std::endl;
 
         index = 0;
 
-        for(auto& itr : route_shape){
+        for(auto&& itr : *_route_shape){
 
             printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
 
         }
-    }
 
-
+        return _route_shape;
+;    }
+    
+    return NULL;
 
 }
 
@@ -362,6 +377,7 @@ void RealTimeReader::SetSetpoints(){
 RealTimeReader::~RealTimeReader(){
 
     delete bus_trip;
+    delete first_route_shape;
 
 }
 

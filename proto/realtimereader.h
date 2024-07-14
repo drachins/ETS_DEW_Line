@@ -25,9 +25,7 @@ class RealTimeReader{
     void run();
     void set_setpoints(std::vector<std::vector<float>> _setpoints){u_setpoints = _setpoints;};
 
-
     bool trip_ongoing{false};
-
 
     std::string route_number;
     std::string arrive_time;
@@ -38,7 +36,6 @@ class RealTimeReader{
     transit_realtime::FeedMessage trip_feed;
     transit_realtime::FeedMessage vehicle_feed;
 
-
     Trip* bus_trip;
 
 
@@ -46,7 +43,7 @@ class RealTimeReader{
 
     bool CheckForInfo(std::vector<Bus_Stop>* _bus_stops);
     void TrackBus();
-    void ExtractShapeInfo();
+    std::vector<std::tuple<float, float, int>>* ExtractShapeInfo(std::string trip_no);
     void SetSetpoints();
     std::vector<int>FindCommas(std::string _line);
     void FindNearestPoint(int& _index);
@@ -60,10 +57,10 @@ class RealTimeReader{
     std::vector<std::vector<float>> u_setpoints;
     std::vector<int> setpoint_indices;
     std::vector<std::tuple<float, float, int>> route_shape;
+    std::vector<std::tuple<float, float, int>>* first_route_shape;
     int index{0};
     std::tuple<float, float, int> current_bus_pos;
 
-   
     std::vector<const transit_realtime::FeedEntity> trip_ent;
     std::vector<const transit_realtime::FeedEntity> vehicle_ent;
     const char* filepath_trip = "/Users/davidrachinsky/the_workspace/realtime_transit/build/TripUpdate.pb";
