@@ -24,16 +24,22 @@ void RealTimeReader::run(){
     if(first_operation){
         ExtractTripInfo();
         ExtractVehicleInfo();
+        route_shape = ExtractShapeInfo(bus_trip->get_trip_no());
+        if(!first_route_shape.empty())
+            ConcShapeVectors();
         SetSetpoints();
     }
     else{
         TrackBus();
     }
 
+    if(trip_ongoing){
+        std::cout << "Route #: " << bus_trip->get_route_no() << " Bus Stop ID: " << stop_id << " Departure Time: " << arrive_time << std::endl;
+        std::cout << "Bus #: " << bus_trip->get_bus_no(); 
+        printf(" Location: [%f5, %f5], Bearing: %f\n", bus_trip->get_latitude(), bus_trip->get_longitude(), bus_trip->get_bearing());
+    }
 
-    std::cout << "Route #: " << bus_trip->get_route_no() << " Bus Stop ID: " << stop_id << " Departure Time: " << arrive_time << std::endl;
-    std::cout << "Bus #: " << bus_trip->get_bus_no(); 
-    printf(" Location: [%f5, %f5], Bearing: %f\n", bus_trip->get_latitude(), bus_trip->get_longitude(), bus_trip->get_bearing());
+
 
 
 
@@ -76,8 +82,15 @@ void RealTimeReader::ExtractTripInfo(){
 
     }    
 
-    std::cout << "route shape of requested bus trip" << std::endl;
     route_shape = ExtractShapeInfo(bus_trip->get_trip_no());
+
+    if(bus_trip->get_trip_no().empty()){
+        std::cerr << "Bus trip not found! Please re-enter trip information" << std::endl;
+        trip_ongoing = false;
+    }
+
+
+
 
 
 
@@ -85,7 +98,9 @@ void RealTimeReader::ExtractTripInfo(){
 
 void RealTimeReader::ExtractVehicleInfo(){
 
-
+    if(!trip_ongoing){
+        return;
+    }
 
     std::string trip_numb; 
     for(int t = 0; t < vehicle_feed.entity_size(); t++){
@@ -95,32 +110,20 @@ void RealTimeReader::ExtractVehicleInfo(){
             bus_trip->set_longitude(vehicle_feed.entity(t).vehicle().position().longitude());
             bus_trip->set_latitude(vehicle_feed.entity(t).vehicle().position().latitude());
             bus_trip->set_bearing(vehicle_feed.entity(t).vehicle().position().bearing());
-            std::cout << "trip id: " << vehicle_feed.entity(t).vehicle().trip().trip_id() << std::endl;
             std::cout << bus_trip->get_bus_no() << std::endl;
 
             if(first_operation){
                 if(vehicle_feed.entity(t).vehicle().trip().trip_id() != bus_trip->get_trip_no()){
                     std::cout << "route shape of current trip" << std::endl;
                     first_route_shape = ExtractShapeInfo(vehicle_feed.entity(t).vehicle().trip().trip_id());
-                    std::vector<std::tuple<float, float, int>> route_shape_conc;
-                    route_shape.reserve(first_route_shape.size() + route_shape.size());
-                    route_shape_conc.insert(route_shape_conc.begin(), first_route_shape.begin(), first_route_shape.end());
-                    route_shape_conc.insert(route_shape_conc.end(), route_shape.begin(), route_shape.end());
-                    route_shape = route_shape_conc;
-
-                    std::cout << "full route shape" << std::endl;
-                    for(auto&& itr : route_shape){
-
-                        printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
-
-                    }
-                    std::cout << std::endl;
 
                     first_operation = false;
                 }
                 else
                     first_operation = false;
             }
+
+
         }
 
     }
@@ -341,10 +344,31 @@ int RealTimeReader::GetBearing(float _delta_latt, float _delta_long){
 
 }
 
+void RealTimeReader::ConcShapeVectors(){
+
+    std::vector<std::tuple<float, float, int>> route_shape_conc;
+    route_shape.reserve(first_route_shape.size() + route_shape.size());
+    route_shape_conc.insert(route_shape_conc.begin(), first_route_shape.begin(), first_route_shape.end());
+    route_shape_conc.insert(route_shape_conc.end(), route_shape.begin(), route_shape.end());
+    route_shape = route_shape_conc;
+
+    std::cout << "full route shape" << std::endl;
+    for(auto&& itr : route_shape){
+
+        printf("%f6, %f6, %i\n", std::get<0>(itr), std::get<1>(itr), std::get<2>(itr));
+
+    }
+    std::cout << std::endl;
+
+}
+
 
 
 void RealTimeReader::SetSetpoints(){
 
+    if(trip_ongoing){
+        return;
+    }
 
     for(auto itr : u_setpoints){
 

@@ -50,12 +50,17 @@ int main(){
 
         transit->trip_ongoing = true;
 
-        while(transit->trip_ongoing){
+        while(1){
 
             data.download();
             transit->run();
-            std::cout << "working" << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(20000));
+            if(transit->trip_ongoing){
+                std::cout << "working" << std::endl;
+                std::this_thread::sleep_for(std::chrono::milliseconds(20000));
+            }
+            else
+                break;
+
 
         }
 

@@ -48,6 +48,7 @@ class RealTimeReader{
     std::vector<int>FindCommas(std::string _line);
     void FindNearestPoint(int& _index, std::vector<std::tuple<float, float, int>>* _route_shape);
     int GetBearing(float _delta_latt, float _delta_long);
+    void ConcShapeVectors();
 
     void ExtractTripInfo();
     void ExtractVehicleInfo();
