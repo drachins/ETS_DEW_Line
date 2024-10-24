@@ -43,12 +43,12 @@ class RealTimeReader{
 
     bool CheckForInfo(std::vector<Bus_Stop>* _bus_stops);
     void TrackBus();
-    std::vector<std::tuple<float, float, int>> ExtractShapeInfo(std::string trip_no);
+    std::vector<std::tuple<float, float, int, int>> ExtractShapeInfo(std::string trip_no);
     void SetSetpoints();
     std::vector<int>FindCommas(std::string _line);
-    void FindNearestPoint(int& _index, std::vector<std::tuple<float, float, int>>* _route_shape);
-    int GetBearing(float _delta_latt, float _delta_long);
-    void ConcShapeVectors();
+    void FindNearestPoint(int& _index, std::vector<std::tuple<float, float, int, int>>* _route_shape);
+    std::tuple<int, int> GetBearing(float _delta_latt, float _delta_long);
+    void ConcactShapeVectors();
 
     void ExtractTripInfo();
     void ExtractVehicleInfo();
@@ -57,8 +57,8 @@ class RealTimeReader{
     bool first_operation{true};
     std::vector<std::vector<float>> u_setpoints;
     std::vector<int> setpoint_indices;
-    std::vector<std::tuple<float, float, int>> route_shape;
-    std::vector<std::tuple<float, float, int>> first_route_shape;
+    std::vector<std::tuple<float, float, int, int>> route_shape;
+    std::vector<std::tuple<float, float, int, int>> first_route_shape;
     int index{0};
     std::tuple<float, float, int> current_bus_pos;
 
