@@ -25,7 +25,7 @@ int main(){
 
         std::cout << "Enter route#: ";
         getline(std::cin, transit->route_number);
-        std::cout << transit->route_number << std::endl;
+
         std::cout << "Enter departure time: ";
         getline(std::cin, transit->arrive_time);
 
@@ -46,11 +46,12 @@ int main(){
 
         }
 
+
         transit->set_setpoints(setpoints);
 
         transit->trip_ongoing = true;
 
-        while(1){
+        while(true){
 
             data.download();
             transit->run();
@@ -65,6 +66,7 @@ int main(){
         }
 
         delete transit;
+        std::cin.sync();
 
 
     }

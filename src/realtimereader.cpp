@@ -321,15 +321,19 @@ std::tuple<int, int> RealTimeReader::GetBearing(float _delta_latt, float _delta_
     }
 
     if(_delta_latt > 0 && _delta_long >= 0){
+        raw_bearing = 90 - bearing;
         bearing = 90 - bearing;
     }
     else if(_delta_latt <= 0 && _delta_long > 0){
+        raw_bearing += 90;
         bearing += 90;
     }
     else if(_delta_latt  < 0 && _delta_long <= 0){
+        raw_bearing = 270 - bearing;
         bearing = 270 - bearing;
     }
     else if(_delta_latt >= 0 && _delta_long < 0){
+        raw_bearing += 270;
         bearing += 270;
         if(bearing == 360){
             bearing = 0;

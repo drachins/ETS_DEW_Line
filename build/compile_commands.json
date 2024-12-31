@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/davidrachinsky/the_workspace/realtime_transit/build",
+  "command": "/usr/bin/clang++  -I/Users/davidrachinsky/the_workspace/realtime_transit/proto -I/Users/davidrachinsky/the_workspace/realtime_transit/build -isystem /usr/local/include -O2 -g -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/real_time_transit.dir/src/main.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp",
+  "file": "/Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp",
+  "output": "CMakeFiles/real_time_transit.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/davidrachinsky/the_workspace/realtime_transit/build",
+  "command": "/usr/bin/clang++  -I/Users/davidrachinsky/the_workspace/realtime_transit/proto -I/Users/davidrachinsky/the_workspace/realtime_transit/build -isystem /usr/local/include -O2 -g -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/real_time_transit.dir/src/trip.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp",
+  "file": "/Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp",
+  "output": "CMakeFiles/real_time_transit.dir/src/trip.cpp.o"
+},
+{
+  "directory": "/Users/davidrachinsky/the_workspace/realtime_transit/build",
+  "command": "/usr/bin/clang++  -I/Users/davidrachinsky/the_workspace/realtime_transit/proto -I/Users/davidrachinsky/the_workspace/realtime_transit/build -isystem /usr/local/include -O2 -g -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp",
+  "file": "/Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp",
+  "output": "CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o"
+},
+{
+  "directory": "/Users/davidrachinsky/the_workspace/realtime_transit/build",
+  "command": "/usr/bin/clang++  -I/Users/davidrachinsky/the_workspace/realtime_transit/proto -I/Users/davidrachinsky/the_workspace/realtime_transit/build -isystem /usr/local/include -O2 -g -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/real_time_transit.dir/src/data_download.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp",
+  "file": "/Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp",
+  "output": "CMakeFiles/real_time_transit.dir/src/data_download.cpp.o"
+},
+{
+  "directory": "/Users/davidrachinsky/the_workspace/realtime_transit/build",
+  "command": "/usr/bin/clang++  -I/Users/davidrachinsky/the_workspace/realtime_transit/proto -I/Users/davidrachinsky/the_workspace/realtime_transit/build -isystem /usr/local/include -O2 -g -DNDEBUG -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o -c /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc",
+  "file": "/Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc",
+  "output": "CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o"
+}
+]

@@ -73,71 +73,71 @@ CMakeFiles/real_time_transit.dir/src/main.cpp.o: CMakeFiles/real_time_transit.di
 CMakeFiles/real_time_transit.dir/src/main.cpp.o: /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp
 CMakeFiles/real_time_transit.dir/src/main.cpp.o: CMakeFiles/real_time_transit.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/real_time_transit.dir/src/main.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/main.cpp.o -MF CMakeFiles/real_time_transit.dir/src/main.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/main.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/main.cpp.o -MF CMakeFiles/real_time_transit.dir/src/main.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/main.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp
 
 CMakeFiles/real_time_transit.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/real_time_transit.dir/src/main.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp > CMakeFiles/real_time_transit.dir/src/main.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp > CMakeFiles/real_time_transit.dir/src/main.cpp.i
 
 CMakeFiles/real_time_transit.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/real_time_transit.dir/src/main.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp -o CMakeFiles/real_time_transit.dir/src/main.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/main.cpp -o CMakeFiles/real_time_transit.dir/src/main.cpp.s
 
 CMakeFiles/real_time_transit.dir/src/trip.cpp.o: CMakeFiles/real_time_transit.dir/flags.make
 CMakeFiles/real_time_transit.dir/src/trip.cpp.o: /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp
 CMakeFiles/real_time_transit.dir/src/trip.cpp.o: CMakeFiles/real_time_transit.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/real_time_transit.dir/src/trip.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/trip.cpp.o -MF CMakeFiles/real_time_transit.dir/src/trip.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/trip.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/trip.cpp.o -MF CMakeFiles/real_time_transit.dir/src/trip.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/trip.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp
 
 CMakeFiles/real_time_transit.dir/src/trip.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/real_time_transit.dir/src/trip.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp > CMakeFiles/real_time_transit.dir/src/trip.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp > CMakeFiles/real_time_transit.dir/src/trip.cpp.i
 
 CMakeFiles/real_time_transit.dir/src/trip.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/real_time_transit.dir/src/trip.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp -o CMakeFiles/real_time_transit.dir/src/trip.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/trip.cpp -o CMakeFiles/real_time_transit.dir/src/trip.cpp.s
 
 CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o: CMakeFiles/real_time_transit.dir/flags.make
 CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o: /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp
 CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o: CMakeFiles/real_time_transit.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o -MF CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o -MF CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp
 
 CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp > CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp > CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.i
 
 CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp -o CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/realtimereader.cpp -o CMakeFiles/real_time_transit.dir/src/realtimereader.cpp.s
 
 CMakeFiles/real_time_transit.dir/src/data_download.cpp.o: CMakeFiles/real_time_transit.dir/flags.make
 CMakeFiles/real_time_transit.dir/src/data_download.cpp.o: /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp
 CMakeFiles/real_time_transit.dir/src/data_download.cpp.o: CMakeFiles/real_time_transit.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/real_time_transit.dir/src/data_download.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/data_download.cpp.o -MF CMakeFiles/real_time_transit.dir/src/data_download.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/data_download.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/src/data_download.cpp.o -MF CMakeFiles/real_time_transit.dir/src/data_download.cpp.o.d -o CMakeFiles/real_time_transit.dir/src/data_download.cpp.o -c /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp
 
 CMakeFiles/real_time_transit.dir/src/data_download.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/real_time_transit.dir/src/data_download.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp > CMakeFiles/real_time_transit.dir/src/data_download.cpp.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp > CMakeFiles/real_time_transit.dir/src/data_download.cpp.i
 
 CMakeFiles/real_time_transit.dir/src/data_download.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/real_time_transit.dir/src/data_download.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp -o CMakeFiles/real_time_transit.dir/src/data_download.cpp.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/src/data_download.cpp -o CMakeFiles/real_time_transit.dir/src/data_download.cpp.s
 
 CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o: CMakeFiles/real_time_transit.dir/flags.make
 CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o: /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc
 CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o: CMakeFiles/real_time_transit.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/davidrachinsky/the_workspace/realtime_transit/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o -MF CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o.d -o CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o -c /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o -MF CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o.d -o CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.o -c /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc
 
 CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc > CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.i
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc > CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.i
 
 CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc -o CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.s
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/davidrachinsky/the_workspace/realtime_transit/proto/gtfs-realtime.pb.cc -o CMakeFiles/real_time_transit.dir/proto/gtfs-realtime.pb.cc.s
 
 # Object files for target real_time_transit
 real_time_transit_OBJECTS = \

@@ -5,7 +5,7 @@ Trip::Trip(){}
 
 void Trip::set_bus_stops(transit_realtime::TripUpdate trip_update){
 
-    uint16_t mst = 21600;
+    uint16_t mst = 25200;
 
     bus_stops.erase(bus_stops.begin(), bus_stops.end());
     
