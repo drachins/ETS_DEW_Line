@@ -310,13 +310,13 @@ std::tuple<int, int> RealTimeReader::GetBearing(float _delta_latt, float _delta_
 
     raw_bearing = bearing;
     
-    if(bearing >= 0 && bearing <= 15){
+    if(bearing >= 0 && bearing <= 35){
         bearing = 0;
     }
-    else if(bearing > 15 && bearing < 75){
+    else if(bearing > 35 && bearing < 55){
         bearing = 45;
     }
-    else if(bearing >= 75 && bearing <= 90){
+    else if(bearing >= 55 && bearing <= 90){
         bearing = 90;
     }
 
