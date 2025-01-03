@@ -275,7 +275,7 @@ void RealTimeReader::FindNearestPoint(int& _index, std::vector<std::tuple<float,
     while(!index_found){
 
         for(int i = _index; i < _route_shape->size(); i++){
-            if(sqrt(pow(std::get<0>(_route_shape->at(i)) - std::get<0>(current_bus_pos), 2) + pow(std::get<1>(_route_shape->at(i)) - std::get<1>(current_bus_pos), 2)) < delta && (std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) || std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) + 45 || std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i) - 45) )){
+            if(sqrt(pow(std::get<0>(_route_shape->at(i)) - std::get<0>(current_bus_pos), 2) + pow(std::get<1>(_route_shape->at(i)) - std::get<1>(current_bus_pos), 2)) < delta && (std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) || std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) + 45 || std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) - 45)){
                 _index = i;
                 std::cout << "TRUE" << std::endl;
                 index_found  = true;
