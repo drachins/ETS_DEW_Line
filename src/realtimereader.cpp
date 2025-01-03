@@ -275,7 +275,7 @@ void RealTimeReader::FindNearestPoint(int& _index, std::vector<std::tuple<float,
     while(!index_found){
 
         for(int i = _index; i < _route_shape->size(); i++){
-            if(sqrt(pow(std::get<0>(_route_shape->at(i)) - std::get<0>(current_bus_pos), 2) + pow(std::get<1>(_route_shape->at(i)) - std::get<1>(current_bus_pos), 2)) < delta && std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i))){
+            if(sqrt(pow(std::get<0>(_route_shape->at(i)) - std::get<0>(current_bus_pos), 2) + pow(std::get<1>(_route_shape->at(i)) - std::get<1>(current_bus_pos), 2)) < delta && (std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) || std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i)) + 45 || std::get<2>(current_bus_pos) == std::get<2>(_route_shape->at(i) - 45) )){
                 _index = i;
                 std::cout << "TRUE" << std::endl;
                 index_found  = true;
@@ -297,7 +297,7 @@ void RealTimeReader::FindNearestPoint(int& _index, std::vector<std::tuple<float,
 
 std::tuple<int, int> RealTimeReader::GetBearing(float _delta_latt, float _delta_long){
 
-    int bearing, raw_bearing;
+ int bearing, raw_bearing;
     std::tuple<int, int> bearing_tuple;
     float hypot  = sqrt(pow(_delta_latt, 2) + pow(_delta_long, 2));
 
@@ -310,13 +310,13 @@ std::tuple<int, int> RealTimeReader::GetBearing(float _delta_latt, float _delta_
 
     raw_bearing = bearing;
     
-    if(bearing >= 0 && bearing <= 35){
+    if(bearing >= 0 && bearing <= 15){
         bearing = 0;
     }
-    else if(bearing > 35 && bearing < 55){
+    else if(bearing > 15 && bearing < 75){
         bearing = 45;
     }
-    else if(bearing >= 55 && bearing <= 90){
+    else if(bearing >= 75 && bearing <= 90){
         bearing = 90;
     }
 
