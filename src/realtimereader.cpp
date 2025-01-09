@@ -371,11 +371,13 @@ void RealTimeReader::SetSetpoints(){
         return;
     }
 
+    int ind = 0;
+
     for(auto itr : u_setpoints){
 
         std::vector<std::pair<float, int>> setpoint_distances;
 
-        for(int t = 0; t < route_shape.size(); t++){
+        for(int t = ind; t < route_shape.size(); t++){
 
             float distance = sqrt(pow(itr.at(0) - std::get<0>(route_shape[t]), 2) + pow(itr.at(1) - std::get<1>(route_shape[t]), 2));
             int t_index = t;
@@ -384,9 +386,11 @@ void RealTimeReader::SetSetpoints(){
             setpoint_distances.push_back(setpoint_distance);
         }
 
+
         std::sort(setpoint_distances.begin(), setpoint_distances.end());
 
         setpoint_indices.push_back(std::get<1>(setpoint_distances.front()));
+        ind = setpoint_indices.back();
 
     }
 
