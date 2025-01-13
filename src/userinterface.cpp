@@ -32,3 +32,19 @@ void UserInterface::UserInput(){
         realtime->set_setpoints(setpoints);  
   
 }
+
+void UserInterFace::Display(){
+
+        std::cout << "Index: " << realtime->index << std::endl;
+        std::cout << std::get<0>(route_shape.at(index)) << ", " << std::get<1>(route_shape.at(index)) << ", " <<std::get<2>(route_shape.at(index)) << ", " << std::get<3>(route_shape.at(index)) << std::endl;
+        
+        std::cout << "Route #: " << bus_trip->get_route_no() << " Bus Stop ID: " << stop_id << " Departure Time: " << arrive_time << std::endl;
+        std::cout << "Bus #: " << bus_trip->get_bus_no(); 
+        printf(" Location: [%f5, %f5], Bearing: %f\n", bus_trip->get_latitude(), bus_trip->get_longitude(), bus_trip->get_bearing());
+}
+
+
+
+
+
+
