@@ -10,6 +10,7 @@ class UserInterface{
   public:
     UserInterface();
     void UserInput();
+    void Display();
     void setRealTimeHandle(RealTimeReader* _realtime){realtime = _realtime;}
     void setTripHandle(Trip* _trip){trip = _trip;}
     ~UserInterface();
